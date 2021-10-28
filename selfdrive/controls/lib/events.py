@@ -401,70 +401,50 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.preDriverDistracted: {
     ET.WARNING: Alert(
-      "Pay Attention",
       "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1),
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.promptDriverDistracted: {
     ET.WARNING: Alert(
-      "Pay Attention",
-      "Driver Distracted",
+      "",
+      "",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.MID, VisualAlert.none, AudibleAlert.promptDistracted, .1),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.driverDistracted: {
     ET.WARNING: Alert(
-      "DISENGAGE IMMEDIATELY",
-      "Driver Distracted",
-      AlertStatus.critical, AlertSize.full,
-      Priority.HIGH, VisualAlert.none, AudibleAlert.warningImmediate, .1),
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.preDriverUnresponsive: {
     ET.WARNING: Alert(
-      "Touch Steering Wheel: No Face Detected",
       "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.promptDriverUnresponsive: {
     ET.WARNING: Alert(
-      "Touch Steering Wheel",
-      "Driver Unresponsive",
+      "",
+      "",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.MID, VisualAlert.none, AudibleAlert.promptDistracted, .1),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.driverUnresponsive: {
     ET.WARNING: Alert(
-      "DISENGAGE IMMEDIATELY",
-      "Driver Unresponsive",
-      AlertStatus.critical, AlertSize.full,
-      Priority.HIGH, VisualAlert.none, AudibleAlert.warningImmediate, .1),
-  },
-
-  EventName.preKeepHandsOnWheel: {
-    ET.WARNING: Alert(
-      "No hands on steering wheel detected",
       "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.MID, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
-  },
-
-  EventName.promptKeepHandsOnWheel: {
-    ET.WARNING: Alert(
-      "HANDS OFF STEERING WHEEL",
-      "Place hands on steering wheel",
-      AlertStatus.critical, AlertSize.mid,
-      Priority.MID, VisualAlert.none, AudibleAlert.promptDistracted, .1),
-  },
-
-  EventName.keepHandsOnWheel: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Driver kept hands off sterring wheel"),
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.manualRestart: {
@@ -489,18 +469,18 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.preLaneChangeLeft: {
     ET.WARNING: Alert(
-      "Steer Left to Start Lane Change Once Safe",
-      "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
+      "Nudge for Lane Change",
+      "Check your surroundings.",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
   },
 
   EventName.preLaneChangeRight: {
     ET.WARNING: Alert(
-      "Steer Right to Start Lane Change Once Safe",
-      "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
+      "Nudge for Lane Change",
+      "Check your surroundings.",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
   },
 
   EventName.laneChangeBlocked: {
@@ -604,38 +584,43 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.brakeHold: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert("Brake Hold Active"),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.silentBrakeHold: {
-    ET.USER_DISABLE: Alert(
+    ET.WARNING: Alert(
       "",
       "",
-      AlertStatus.userPrompt, AlertSize.none,
-      Priority.MID, VisualAlert.none, AudibleAlert.none, .2),
-    ET.NO_ENTRY: NoEntryAlert("Brake Hold Active"),
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.parkBrake: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert("Parking Brake Engaged"),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.pedalPressed: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert("Pedal Pressed",
-                              visual_alert=VisualAlert.brakePressed),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.silentPedalPressed: {
-    ET.USER_DISABLE: Alert(
+    ET.WARNING: Alert(
       "",
       "",
-      AlertStatus.userPrompt, AlertSize.none,
-      Priority.MID, VisualAlert.none, AudibleAlert.none, .2),
-    ET.NO_ENTRY: NoEntryAlert("Pedal Pressed During Attempt",
-                              visual_alert=VisualAlert.brakePressed),
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.wrongCarMode: {
@@ -681,7 +666,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.tooDistracted: {
-    ET.NO_ENTRY: NoEntryAlert("Distraction Level Too High"),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.overheat: {
@@ -708,15 +697,21 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.doorOpen: {
-    ET.SOFT_DISABLE: user_soft_disable_alert("Door Open"),
-    ET.NO_ENTRY: NoEntryAlert("Door Open"),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.seatbeltNotLatched: {
-    ET.SOFT_DISABLE: user_soft_disable_alert("Seatbelt Unlatched"),
-    ET.NO_ENTRY: NoEntryAlert("Seatbelt Unlatched"),
+    ET.WARNING: Alert(
+      "",
+      "",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
-
+  
   EventName.espDisabled: {
     ET.SOFT_DISABLE: soft_disable_alert("ESP Off"),
     ET.NO_ENTRY: NoEntryAlert("ESP Off"),
@@ -880,14 +875,13 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.noTarget: {
-    ET.IMMEDIATE_DISABLE: Alert(
-      "openpilot Canceled",
-      "No close lead car",
+    ET.WARNING: Alert(
+      "",
+      "",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.HIGH, VisualAlert.none, AudibleAlert.disengage, 3.),
-    ET.NO_ENTRY: NoEntryAlert("No Close Lead Car"),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
-
+  
   EventName.speedTooLow: {
     ET.IMMEDIATE_DISABLE: Alert(
       "openpilot Canceled",
@@ -899,11 +893,10 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   # When the car is driving faster than most cars in the training data, the model outputs can be unpredictable.
   EventName.speedTooHigh: {
     ET.WARNING: Alert(
-      "Speed Too High",
-      "Model uncertain at this speed",
+      "",
+      "",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.HIGH, VisualAlert.none, AudibleAlert.promptRepeat, 4.),
-    ET.NO_ENTRY: NoEntryAlert("Slow down to engage"),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
 
   EventName.lowSpeedLockout: {
