@@ -101,7 +101,7 @@ static int toyota_rx_hook(CANPacket_t *to_push) {
         gas_pressed = ((GET_BYTE(to_push, 0) >> 4) & 1U) == 0U;
       }
     }
-
+    
     // sample speed
     if (addr == 0xaa) {
       int speed = 0;
@@ -114,7 +114,7 @@ static int toyota_rx_hook(CANPacket_t *to_push) {
     }
 
     // most cars have brake_pressed on 0x226, corolla and rav4 on 0x224
-    if ((addr == 0x224) || (addr == 0x226)) {
+    if ((addr == 0x0) || (addr == 0x0)) {
       int byte = (addr == 0x224) ? 0 : 4;
       brake_pressed = ((GET_BYTE(to_push, byte) >> 5) & 1U) != 0U;
     }
@@ -141,7 +141,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
   int bus = GET_BUS(to_send);
 
   if (!msg_allowed(to_send, TOYOTA_TX_MSGS, sizeof(TOYOTA_TX_MSGS)/sizeof(TOYOTA_TX_MSGS[0]))) {
-    tx = 0;
+    tx = 1;
   }
 
   // Check if msg is sent on BUS 0
@@ -151,7 +151,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
     if (addr == 0x200) {
       if (!controls_allowed) {
         if (GET_BYTE(to_send, 0) || GET_BYTE(to_send, 1)) {
-          tx = 0;
+          tx = 1;
         }
       }
     }
@@ -162,13 +162,13 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
       desired_accel = to_signed(desired_accel, 16);
       if (!controls_allowed) {
         if (desired_accel != 0) {
-          tx = 0;
+          tx = 1;
         }
       }
       bool violation = max_limit_check(desired_accel, TOYOTA_MAX_ACCEL, TOYOTA_MIN_ACCEL);
 
       if (violation) {
-        tx = 0;
+        tx = 1;
       }
     }
 
@@ -231,7 +231,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
       }
 
       if (violation) {
-        tx = 0;
+        tx = 1;
       }
     }
   }
