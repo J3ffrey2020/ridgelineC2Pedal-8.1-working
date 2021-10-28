@@ -6,6 +6,8 @@ from selfdrive.config import Conversions as CV
 from selfdrive.modeld.constants import T_IDXS
 
 
+params = Params()
+
 # kph
 V_CRUISE_MAX = 200
 V_CRUISE_MIN = 0
@@ -40,7 +42,8 @@ def rate_limit(new_value, last_value, dw_step, up_step):
 def get_steer_max(CP, v_ego):
   return interp(v_ego, CP.steerMaxBP, CP.steerMaxV)
 
-def update_v_cruise(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed,decel_pressed,accel_pressed_last,decel_pressed_last, fastMode):
+
+def _update_v_cruise(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed,decel_pressed,accel_pressed_last,decel_pressed_last, fastMode):
   if enabled:
     if accel_pressed:
       if ((cur_time-accel_pressed_last) >= 0.5 or (fastMode and (cur_time-accel_pressed_last) >= 0.5)):
@@ -60,6 +63,7 @@ def update_v_cruise(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed
     v_cruise_kph = clip(v_cruise_kph, V_CRUISE_MIN, V_CRUISE_MAX) 
 
   return v_cruise_kph
+
 
 def _update_v_cruise_speed_inc(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed,decel_pressed,accel_pressed_last,decel_pressed_last, fastMode):
   if enabled:
@@ -83,8 +87,20 @@ def _update_v_cruise_speed_inc(v_cruise_kph, buttonEvents, enabled, cur_time, ac
   return v_cruise_kph
 
 
-if Params().get_bool('SpeedInc'):
-  update_v_cruise = _update_v_cruise_speed_inc
+if params.get_bool('SpeedInc'):
+  update_v_cruise = _update_v_cruise = _update_v_cruise_speed_inc
+
+
+def _update_v_cruise_civic_speed_adjustment(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed,decel_pressed,accel_pressed_last,decel_pressed_last, fastMode):
+  v_cruise_kph = int(round((float(v_cruise_kph) * 0.6233 + 0.0995)))
+  v_cruise_kph = _update_v_cruise(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed,decel_pressed,accel_pressed_last,decel_pressed_last, fastMode)
+  v_cruise_kph = int(round((float(round(v_cruise_kph))-0.0995)/0.6233))
+  return v_cruise_kph
+
+
+if params.get_bool('CivicSpeedAdjustment') and not params.get_bool("IsMetric"):
+  update_v_cruise = _update_v_cruise_civic_speed_adjustment
+
 
 
 def initialize_v_cruise(v_ego, buttonEvents, v_cruise_last):
