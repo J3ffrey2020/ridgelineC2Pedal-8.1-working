@@ -86,6 +86,7 @@ def _update_v_cruise_speed_inc(v_cruise_kph, buttonEvents, enabled, cur_time, ac
 
   return v_cruise_kph
 
+update_v_cruise = _update_v_cruise
 
 if params.get_bool('SpeedInc'):
   update_v_cruise = _update_v_cruise = _update_v_cruise_speed_inc
