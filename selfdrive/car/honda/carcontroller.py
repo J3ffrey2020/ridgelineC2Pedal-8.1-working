@@ -177,7 +177,7 @@ class CarController():
     accel = -4.0 if stopping else accel
 
     # wind brake from air resistance decel at high speed
-    wind_brake = interp(CS.out.vEgo, [0.0, 2.3, 35.0], [0.001, 0.002, 0.15])
+    wind_brake = interp(CS.out.vEgo, [0.0, 2.3, 24.0], [0.001, 0.002, 0.22])
     # all of this is only relevant for HONDA NIDEC
     max_accel = interp(CS.out.vEgo, P.NIDEC_MAX_ACCEL_BP, P.NIDEC_MAX_ACCEL_V)
     # TODO this 1.44 is just to maintain previous behavior
@@ -246,7 +246,7 @@ class CarController():
             gas_mult = interp(CS.out.vEgo, [0., 10.], [0.4, 1.0])
             # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
             # This prevents unexpected pedal range rescaling
-            apply_gas = clip(gas_mult * gas, 0., 1.)
+            apply_gas = clip(gas_mult * (gas - brake + wind_brake*3/4), 0., 1.)
             if not CS.out.cruiseState.enabled:
               apply_gas = 0.
             can_sends.append(create_gas_command(self.packer, apply_gas, idx))
