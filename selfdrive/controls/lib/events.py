@@ -147,7 +147,7 @@ class Alert:
 class NoEntryAlert(Alert):
   def __init__(self, alert_text_2, audible_alert=AudibleAlert.none,
                visual_alert=VisualAlert.none, duration_hud_alert=2.):
-    super().__init__("Openpilot Standby", alert_text_2, AlertStatus.userPrompt,
+    super().__init__("Autopilot Unavailable", alert_text_2, AlertStatus.userPrompt,
                      AlertSize.mid, Priority.LOW, visual_alert,
                      audible_alert, .4, duration_hud_alert, 3.)
 
@@ -260,7 +260,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.startup: {
     ET.PERMANENT: Alert(
       "Welcome to Openpilot",
-      "To use Autosteer, press the lane-keep-assist button.",
+      "To use Autopilot, press the lane-keep-assist button.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 10.),
   },
@@ -268,7 +268,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
   EventName.startupMaster: {
     ET.PERMANENT: Alert(
       "Welcome to Openpilot",
-      "To use Autosteer, press the lane-keep-assist button.",
+      "To use Autopilot, press the lane-keep-assist button.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 10.),
   },
@@ -735,10 +735,10 @@ EVENTS: Dict[int, Dict[str, Union[Alert, Callable[[Any, messaging.SubMaster, boo
 
   EventName.seatbeltNotLatched: {
     ET.WARNING: Alert(
-      "",
-      "",
+      "Autopilot Unavailable",
+      "Seatbelt Unlatched",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 1., 1., 1.),
   },
   
   EventName.espDisabled: {
