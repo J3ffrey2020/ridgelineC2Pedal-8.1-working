@@ -19,7 +19,7 @@ public:
 private:
   QPushButton *dlpBtn;
 
-  const QStringList dlpBtnColors = {"#00FF00", "#00FF00", "#00FF00"};
+  const QStringList dlpBtnColors = {"#0000FF", "#0000FF", "#0000FF"};
 
 public slots:
   void updateState(const UIState &s);
@@ -205,7 +205,7 @@ protected:
   void drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV3::Reader &lead_data, const QPointF &vd);
   inline QColor redColor(int alpha = 255) { return QColor(201, 34, 49, alpha); }
   inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
-  inline QColor greenColor(int alpha = 255) { return QColor(0, 255, 0, alpha); }
+  inline QColor greenColor(int alpha = 255) { return QColor(0, 0, 255, alpha); }
   inline QColor graceBlueColor(int alpha = 255) { return QColor (34, 49, 201, alpha); }
   double prev_draw_t = 0;
 
