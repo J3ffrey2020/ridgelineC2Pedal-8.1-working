@@ -235,7 +235,7 @@ class LongitudinalMpc():
     # these were calculated using the test_longitudial.py deceleration tests
     # All tests pass without changing any of the costs, but these small
     # adjustments keep the stopping profile approximately in line with stock.
-    TFs = [1.0, 1.25, T_FOLLOW]
+    TFs = [0.7, 0.8, T_FOLLOW]
     x_ego_obstacle_cost_multiplier = interp(self.desired_TF, TFs, [2, 1.3, 1.])
     j_ego_cost_multiplier = interp(self.desired_TF, TFs, [.1, .8, 1.])
     d_zone_cost_multiplier = interp(self.desired_TF, TFs, [1.8, 1.3, 1.])
@@ -316,7 +316,7 @@ class LongitudinalMpc():
       # At slow speeds more time, decrease time up to 60mph
       # in mph ~= 5     10   15   20  25     30    35     40  45     50    55     60  65     70    75     80  85     90
       x_vel = [0, 2.25, 4.5, 6.75, 9, 11.25, 13.5, 15.75, 18, 20.25, 22.5, 24.75, 27, 29.25, 31.5, 33.75, 36, 38.25, 40.5]
-      y_dist = [1.05, 1.00, 0.8, 0.7, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.57, 0.56, 0.55, 0.55, 0.55, 0.55, 0.55, 0.55]
+      y_dist = [0.8, 0.77, 0.72, 0.7, 0.67, 0.62, 0.57, 0.56, 0.55, 0.54, 0.53, 0.52, 0.51, 0.5, 0.49, 0.48, 0.47, 0.46, 0.45]
       new_TF = np.interp(carstate.vEgo, x_vel, y_dist)
     elif carstate.distanceLines == 2: # Relaxed
       new_TF = 1.0
