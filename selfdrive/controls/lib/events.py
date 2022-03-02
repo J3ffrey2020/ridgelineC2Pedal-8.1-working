@@ -489,18 +489,18 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.preLaneChangeLeft: {
     ET.WARNING: Alert(
-      "Steer Left to Start Lane Change Once Safe",
-      "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
+      "Nudge for Lane Change",
+      "Check your surroundings.",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
   },
 
   EventName.preLaneChangeRight: {
     ET.WARNING: Alert(
-      "Steer Right to Start Lane Change Once Safe",
-      "",
-      AlertStatus.userPrompt, AlertSize.small,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1, alert_rate=0.75),
+      "Nudge for Lane Change",
+      "Check your surroundings.",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
   },
 
   EventName.laneChangeBlocked: {
@@ -603,39 +603,9 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
   },
 
-  EventName.brakeHold: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert("Brake Hold Active"),
-  },
-
-  EventName.silentBrakeHold: {
-    ET.USER_DISABLE: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.none,
-      Priority.MID, VisualAlert.none, AudibleAlert.none, .2),
-    ET.NO_ENTRY: NoEntryAlert("Brake Hold Active"),
-  },
-
   EventName.parkBrake: {
     ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
     ET.NO_ENTRY: NoEntryAlert("Parking Brake Engaged"),
-  },
-
-  EventName.pedalPressed: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
-    ET.NO_ENTRY: NoEntryAlert("Pedal Pressed",
-                              visual_alert=VisualAlert.brakePressed),
-  },
-
-  EventName.silentPedalPressed: {
-    ET.USER_DISABLE: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.none,
-      Priority.MID, VisualAlert.none, AudibleAlert.none, .2),
-    ET.NO_ENTRY: NoEntryAlert("Pedal Pressed During Attempt",
-                              visual_alert=VisualAlert.brakePressed),
   },
 
   EventName.wrongCarMode: {
@@ -706,17 +676,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.SOFT_DISABLE: soft_disable_alert("Calibration in Progress"),
     ET.NO_ENTRY: NoEntryAlert("Calibration in Progress"),
   },
-
-  EventName.doorOpen: {
-    ET.SOFT_DISABLE: user_soft_disable_alert("Door Open"),
-    ET.NO_ENTRY: NoEntryAlert("Door Open"),
-  },
-
-  EventName.seatbeltNotLatched: {
-    ET.SOFT_DISABLE: user_soft_disable_alert("Seatbelt Unlatched"),
-    ET.NO_ENTRY: NoEntryAlert("Seatbelt Unlatched"),
-  },
-
+  
   EventName.espDisabled: {
     ET.SOFT_DISABLE: soft_disable_alert("ESP Off"),
     ET.NO_ENTRY: NoEntryAlert("ESP Off"),
