@@ -472,7 +472,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
       "Nudge for Lane Change",
       "Check your surroundings.",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
   },
 
   EventName.preLaneChangeRight: {
@@ -480,7 +480,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
       "Nudge for Lane Change",
       "Check your surroundings.",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
   },
 
   EventName.laneChangeBlocked: {
@@ -583,39 +583,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.USER_DISABLE: EngagementAlert(AudibleAlert.disengage),
   },
 
-  EventName.brakeHold: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
-  },
-
-  EventName.silentBrakeHold: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
-  },
-
   EventName.parkBrake: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
-  },
-
-  EventName.pedalPressed: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
-  },
-
-  EventName.silentPedalPressed: {
     ET.WARNING: Alert(
       "",
       "",
@@ -694,22 +662,6 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.PERMANENT: calibration_incomplete_alert,
     ET.SOFT_DISABLE: soft_disable_alert("Calibration in Progress"),
     ET.NO_ENTRY: NoEntryAlert("Calibration in Progress"),
-  },
-
-  EventName.doorOpen: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
-  },
-
-  EventName.seatbeltNotLatched: {
-    ET.WARNING: Alert(
-      "",
-      "",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, 0., 0., .0),
   },
   
   EventName.espDisabled: {
