@@ -7,10 +7,9 @@ from selfdrive.modeld.constants import T_IDXS
 
 # WARNING: this value was determined based on the model's training distribution,
 #          model predictions above this speed can be unpredictable
-V_CRUISE_MAX = 145  # kph
-V_CRUISE_MIN = 5  # kph
-V_CRUISE_DELTA = 5
-V_CRUISE_ENABLE_MIN = 40  # kph
+V_CRUISE_MAX = 200  # kph
+V_CRUISE_MIN = 8  # kph
+V_CRUISE_ENABLE_MIN = 0
 
 LAT_MPC_N = 16
 LON_MPC_N = 32
@@ -81,7 +80,6 @@ def update_v_cruise(v_cruise_kph, buttonEvents, enabled, cur_time, accel_pressed
     v_cruise_kph = clip(v_cruise_kph, V_CRUISE_MIN, V_CRUISE_MAX)
 
   return v_cruise_kph
-
 
 def initialize_v_cruise(v_ego, buttonEvents, v_cruise_last):
   for b in buttonEvents:

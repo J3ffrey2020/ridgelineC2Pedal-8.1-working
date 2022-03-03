@@ -24,6 +24,28 @@ class CarState(CarStateBase):
 
     self.low_speed_lockout = False
     self.acc_type = 1
+    self.steer_not_allowed = False
+    self.resumeAvailable = False
+    self.accEnabled = False
+    self.lkasEnabled = False
+    self.leftBlinkerOn = False
+    self.rightBlinkerOn = False
+    self.disengageByBrake = False
+    self.belowLaneChangeSpeed = True
+    self.automaticLaneChange = True #TODO: add setting back
+
+    self.cruise_buttons = 0
+    self.prev_cruise_buttons = 0
+
+    self.lkas_enabled = None
+    self.prev_lkas_enabled = None
+
+    self.cruiseState_standstill = False
+
+    self.acc_mads_combo = None
+    self.prev_acc_mads_combo = None
+    
+    self.distance_btn = 0
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -90,6 +112,10 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint in TSS2_CAR:
       self.acc_type = cp_cam.vl["ACC_CONTROL"]["ACC_TYPE"]
+
+      # KRKeegan - Add support for toyota distance button
+      self.distance_btn = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
+      ret.distanceLines = cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"]
 
     # some TSS2 cars have low speed lockout permanently set, so ignore on those cars
     # these cars are identified by an ACC_TYPE value of 2.
@@ -197,6 +223,11 @@ class CarState(CarStateBase):
         ("BSM", 1)
       ]
 
+    # KRKeegan - Add support for toyota distance button
+    if CP.carFingerprint in TSS2_CAR:
+      signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM", 0))
+      checks.append(("PCM_CRUISE_SM", 1))
+
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
   @staticmethod
@@ -214,7 +245,10 @@ class CarState(CarStateBase):
     ]
 
     if CP.carFingerprint in TSS2_CAR:
-      signals.append(("ACC_TYPE", "ACC_CONTROL", 0))
-      checks.append(("ACC_CONTROL", 33))
+      signals.append(("ACC_TYPE", "ACC_CONTROL", 0)),
+      checks.append(("ACC_CONTROL", 33)),
+
+      # KRKeegan - Add support for toyota distance button
+      signals.append(("DISTANCE", "ACC_CONTROL", 0)),
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
