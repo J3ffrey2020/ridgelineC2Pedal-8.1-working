@@ -736,10 +736,6 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert("Cruise Faulted"),
   },
 
-  EventName.controlsMismatch: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Controls Mismatch"),
-  },
-
   EventName.roadCameraError: {
     ET.PERMANENT: NormalPermanentAlert("Camera Error",
                                        duration=1.,
@@ -798,8 +794,6 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
       "",
       AlertStatus.userPrompt, AlertSize.full,
       Priority.LOWEST, VisualAlert.none, AudibleAlert.none, .2, creation_delay=0.5),
-    ET.USER_DISABLE: ImmediateDisableAlert("Reverse Gear"),
-    ET.NO_ENTRY: NoEntryAlert("Reverse Gear"),
   },
 
   # On cars that use stock ACC the car can decide to cancel ACC for various reasons.
