@@ -43,6 +43,9 @@ class CarState(CarStateBase):
 
     self.cruiseState_standstill = False
 
+    self.acc_mads_combo = None
+    self.prev_acc_mads_combo = None
+
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
@@ -50,6 +53,7 @@ class CarState(CarStateBase):
     self.prev_cruise_buttons = self.cruise_buttons
     self.prev_lkas_enabled = self.lkas_enabled
     self.disable_mads = Params().get_bool("DisableMADS")
+    self.acc_mads_combo = Params().get_bool("ACCMADSCombo")
 
     ret.doorOpen = any([cp.vl["SEATS_DOORS"]["DOOR_OPEN_FL"], cp.vl["SEATS_DOORS"]["DOOR_OPEN_FR"],
                         cp.vl["SEATS_DOORS"]["DOOR_OPEN_RL"], cp.vl["SEATS_DOORS"]["DOOR_OPEN_RR"]])
@@ -153,6 +157,10 @@ class CarState(CarStateBase):
           self.lkasEnabled = True
         elif self.prev_lkas_enabled != 2 and self.lkas_enabled == 2:
           self.lkasEnabled = False
+        if self.acc_mads_combo:
+          if not self.prev_acc_mads_combo and ret.cruiseState.enabled:
+            self.lkasEnabled = True
+          self.prev_acc_mads_combo = ret.cruiseState.enabled
     else:
       self.lkasEnabled = False
 
