@@ -736,10 +736,6 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert("Cruise Faulted"),
   },
 
-  EventName.controlsMismatch: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Controls Mismatch"),
-  },
-
   EventName.roadCameraError: {
     ET.PERMANENT: NormalPermanentAlert("Camera Error",
                                        duration=1.,
