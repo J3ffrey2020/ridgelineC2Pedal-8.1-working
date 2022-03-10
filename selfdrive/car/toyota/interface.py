@@ -102,14 +102,13 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 3300. * CV.LB_TO_KG + STD_CARGO_KG
       set_lat_tune(ret.lateralTuning, LatTunes.PID_F)
 
-    elif candidate in [CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2]:
+    elif candidate in (CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.82448
       ret.steerRatio = 14.7
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
-      # set_lat_tune(ret.lateralTuning, lat_params, LatTunes.STEER_MODEL_CAMRY)
-      set_lat_tune(ret.lateralTuning, lat_params, LatTunes.PID_H)
+      set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
 
     elif candidate in [CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2]:
       stop_and_go = True
