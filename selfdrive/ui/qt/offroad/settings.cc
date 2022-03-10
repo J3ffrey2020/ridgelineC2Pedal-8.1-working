@@ -517,8 +517,14 @@ SunnypilotPanel::SunnypilotPanel(QWidget* parent) : QWidget(parent) {
                                  this));
 
   toggles.append(new ParamControl("ACCMADSCombo",
-                                  "Enable ACC+MADS with RES+/SET-",
+                                  "Enable ACC+LKAS with RES+/SET-",
                                   "Engage both ACC and MADS with a single press of RES+ or SET- button.\nNote: Once MADS is engaged via this mode, it will remain engaged until it is manually disabled via LFA/LKAS/Cruise MAIN button or car shut off.",
+                                  "../assets/offroad/icon_openpilot.png",
+                                  this));
+
+  toggles.append(new ParamControl("LQRTune",
+                                  "Use LQR Tune",
+                                  "LQR tuning values for smoother steering. For select models only.",
                                   "../assets/offroad/icon_openpilot.png",
                                   this));
 
