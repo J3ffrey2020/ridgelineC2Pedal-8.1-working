@@ -284,7 +284,7 @@ class CarInterface(CarInterfaceBase):
                        CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2, CAR.PRIUS_TSS2]:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS2)
       ret.stoppingDecelRate = 0.3  # reach stopping target smoothly
-      ret.startingAccelRate = 6.0  # release brakes fast
+      ret.startingAccelRate = 20.  # release brakes fast
     else:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS)
 
