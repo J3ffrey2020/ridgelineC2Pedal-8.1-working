@@ -522,7 +522,7 @@ SunnypilotPanel::SunnypilotPanel(QWidget* parent) : QWidget(parent) {
                                   "../assets/offroad/icon_openpilot.png",
                                   this));
 
-  toggles.append(new ParamControl("LQRTune",
+  toggles.append(new ParamControl("LqrTune",
                                   "Use LQR Tune",
                                   "LQR tuning values for smoother steering. For select models only.",
                                   "../assets/offroad/icon_openpilot.png",
