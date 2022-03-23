@@ -107,13 +107,13 @@ class CarInterface(CarInterfaceBase):
     elif candidate in (CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.82448
-      ret.steerRatio = 15.7
+      ret.steerRatio = 18.33
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
       if Params().get_bool('LqrTune'):
         ret.lateralTuning.init('lqr')
-        ret.lateralTuning.lqr.scale = 1500.0
-        ret.lateralTuning.lqr.ki = 0.07
+        ret.lateralTuning.lqr.scale = 1200.0
+        ret.lateralTuning.lqr.ki = 0.15
         ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
         ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
         ret.lateralTuning.lqr.c = [1., 0.]
