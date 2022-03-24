@@ -393,7 +393,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.steerTempUnavailableSilent: {
     ET.WARNING: Alert(
-      "Autosteer Temporarily Suspended",
+      "Autosteer still enabled",
       "Steering override by driver.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, 1.),
@@ -602,8 +602,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.steerTempUnavailable: {
-    ET.SOFT_DISABLE: soft_disable_alert("Autosteer Temporarily Suspended"),
-    ET.NO_ENTRY: NoEntryAlert("Autosteer Temporarily Suspended"),
+    ET.WARNING: Alert(
+      "Autosteer still enabled",
+      "Large steer override by driver.",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.none, AudibleAlert.none, 1.),
   },
 
   EventName.outOfSpace: {
