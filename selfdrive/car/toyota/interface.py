@@ -106,10 +106,10 @@ class CarInterface(CarInterfaceBase):
 
     elif candidate in (CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
       stop_and_go = True
-      ret.wheelbase = 2.68986
-      ret.steerRatio = 14.3
+      ret.wheelbase = 2.82448
+      ret.steerRatio = 18.33
       tire_stiffness_factor = 0.7933
-      ret.mass = 3585. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
+      ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
       if Params().get_bool('LqrTune'):
         ret.lateralTuning.init('lqr')
         ret.lateralTuning.lqr.scale = 1200.0
@@ -121,7 +121,7 @@ class CarInterface(CarInterfaceBase):
         ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
         ret.lateralTuning.lqr.dcGain = 0.002337852961363602
       else:
-        set_lat_tune(ret.lateralTuning, LatTunes.PID_D)
+        set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
 
     elif candidate in [CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2]:
       stop_and_go = True
