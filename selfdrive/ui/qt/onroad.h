@@ -205,8 +205,8 @@ protected:
   void drawLead(QPainter &painter, const cereal::ModelDataV2::LeadDataV3::Reader &lead_data, const QPointF &vd);
   inline QColor redColor(int alpha = 255) { return QColor(201, 34, 49, alpha); }
   inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
-  inline QColor greenColor(int alpha = 255) { return QColor(0, 0, 255, alpha); }
-  inline QColor graceBlueColor(int alpha = 255) { return QColor (34, 49, 201, alpha); }
+  inline QColor greenColor(int alpha = 255) { return QColor(255, 28, 236, alpha); }
+  inline QColor graceBlueColor(int alpha = 255) { return QColor (255, 28, 236, alpha); }
   double prev_draw_t = 0;
 
 signals:
