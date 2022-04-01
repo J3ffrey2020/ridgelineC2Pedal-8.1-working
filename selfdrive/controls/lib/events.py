@@ -147,7 +147,7 @@ class NoEntryAlert(Alert):
 
 class SoftDisableAlert(Alert):
   def __init__(self, alert_text_2):
-    super().__init__("TAKE CONTROL IMMEDIATELY", alert_text_2,
+    super().__init__("CRAZY KAYLA SPOTTED", alert_text_2,
                      AlertStatus.userPrompt, AlertSize.full,
                      Priority.MID, VisualAlert.none,
                      AudibleAlert.none, 2.),
@@ -162,7 +162,7 @@ class UserSoftDisableAlert(SoftDisableAlert):
 
 class ImmediateDisableAlert(Alert):
   def __init__(self, alert_text_2):
-    super().__init__("TAKE CONTROL IMMEDIATELY", alert_text_2,
+    super().__init__("CRAZY KAYLA SPOTTED", alert_text_2,
                      AlertStatus.critical, AlertSize.full,
                      Priority.HIGHEST, VisualAlert.none,
                      AudibleAlert.warningImmediate, 4.),
@@ -468,20 +468,13 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.preLaneChangeLeft: {
-    ET.WARNING: Alert(
-      "Nudge for Lane Change",
-      "Check your surroundings.",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Take over immediately"),
   },
 
   EventName.preLaneChangeRight: {
-    ET.WARNING: Alert(
-      "Nudge for Lane Change",
-      "Check your surroundings.",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Take over immediately"),
   },
+
 
   EventName.laneChangeBlocked: {
     ET.WARNING: Alert(
