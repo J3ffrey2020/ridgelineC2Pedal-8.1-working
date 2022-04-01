@@ -468,11 +468,11 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.preLaneChangeLeft: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Take over immediately"),
+    ET.SOFT_DISABLE: soft_disable_alert("Take over immediately"),
   },
 
   EventName.preLaneChangeRight: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Take over immediately"),
+    ET.SOFT_DISABLE: soft_disable_alert("Take over immediately"),
   },
 
 
@@ -485,11 +485,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.laneChange: {
-    ET.WARNING: Alert(
-      "Automatically Changing Lanes",
-      "Check your surroundings.",
-      AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.none, AudibleAlert.none, .1),
+    ET.SOFT_DISABLE: soft_disable_alert("Take over immediately"),
   },
 
   EventName.manualSteeringRequired: {
