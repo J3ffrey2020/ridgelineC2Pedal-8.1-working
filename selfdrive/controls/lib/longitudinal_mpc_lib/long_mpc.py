@@ -319,7 +319,7 @@ class LongitudinalMpc():
       y_dist = [0.9, 0.8, 0.75, 0.7, 0.67, 0.62, 0.57, 0.56, 0.55, 0.54, 0.53, 0.52, 0.51, 0.5, 0.49, 0.48, 0.47, 0.46, 0.45]
       new_TF = np.interp(carstate.vEgo, x_vel, y_dist)
     elif carstate.distanceLines == 2: # Relaxed
-      new_TF = 1.0
+      new_TF = 1.3
     if new_TF != self.desired_TF:
       self.desired_TF = new_TF
       self.set_weights()
