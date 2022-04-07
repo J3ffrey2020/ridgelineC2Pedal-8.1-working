@@ -654,9 +654,6 @@ class Controls:
     steer_angle_without_offset = math.radians(CS.steeringAngleDeg - params.angleOffsetAverageDeg)
     curvature = -self.VM.calc_curvature(steer_angle_without_offset, CS.vEgo)
 
-    if self.v_cruise_kph != 255:
-      controlsState.vCruise = controlsState.vCruise * 1.0225
-
     # controlsState
     dat = messaging.new_message('controlsState')
     dat.valid = CS.canValid
@@ -695,6 +692,8 @@ class Controls:
                                ((not CS.belowLaneChangeSpeed) or ((not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))))))
     controlsState.distanceTraveled = self.distance_traveled
 
+    if self.v_cruise_kph != 255:
+      controlsState.vCruise = controlsState.vCruise * 1.0225
     if self.joystick_mode:
       controlsState.lateralControlState.debugState = lac_log
     elif self.CP.steerControlType == car.CarParams.SteerControlType.angle:
