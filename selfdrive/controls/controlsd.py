@@ -693,7 +693,7 @@ class Controls:
     controlsState.distanceTraveled = self.distance_traveled
 
     if self.v_cruise_kph != 255:
-      controlsState.vCruise = controlsState.vCruise * 1.0375
+      controlsState.vCruise = controlsState.vCruise * 1.0355
     if self.joystick_mode:
       controlsState.lateralControlState.debugState = lac_log
     elif self.CP.steerControlType == car.CarParams.SteerControlType.angle:
