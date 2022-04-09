@@ -40,11 +40,6 @@ AddrCheckStruct toyota_addr_checks[] = {
   {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
            {0x226, 0, 8, .check_checksum = false, .expected_timestep = 25000U}, { 0 }}},
 };
-
-const int TOYOTA_PARAM_MADS_LTA_MSG = 1;
-
-bool toyota_mads_lta_msg = false;
-
 #define TOYOTA_ADDR_CHECKS_LEN (sizeof(toyota_addr_checks) / sizeof(toyota_addr_checks[0]))
 addr_checks toyota_rx_checks = {toyota_addr_checks, TOYOTA_ADDR_CHECKS_LEN};
 
@@ -264,6 +259,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
 }
 
 static const addr_checks* toyota_init(int16_t param) {
+  disengageFromBrakes = false;
   controls_allowed = 0;
   relay_malfunction_reset();
 

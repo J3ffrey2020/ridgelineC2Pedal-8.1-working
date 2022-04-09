@@ -149,26 +149,19 @@ class CarController():
       # forcing the pcm to disengage causes a bad fault sound so play a good sound instead
       send_ui = True
 
-    use_lta_msg = False
     if CarControllerParams.FEATURE_NO_LKAS_ICON:
-      if CS.CP.carFingerprint in FEATURES["use_lta_msg"]:
-        use_lta_msg = True
-        if CS.persistLkasIconDisabled == 1:
-          self.has_set_lkas = True
-      else:
-        use_lta_msg = False
-        if CS.persistLkasIconDisabled == 0:
-          self.has_set_lkas = True
+      if CS.persistLkasIconDisabled == 1:
+        self.has_set_lkas = True
 
       if (frame % 100 == 0 or send_ui):
         if not self.has_set_lkas:
-          can_sends.append(create_ui_command_disable_startup_lkas(self.packer, use_lta_msg))
+          can_sends.append(create_ui_command_disable_startup_lkas(self.packer))
 
     if (frame % 100 == 0 or send_ui):
       if(CS.lkasEnabled):
-        can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, left_line, right_line, left_lane_depart, right_lane_depart, CS.lkasEnabled and not apply_steer_req, use_lta_msg))
+        can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, left_line, right_line, left_lane_depart, right_lane_depart, CS.lkasEnabled and not apply_steer_req))
       else:
-        can_sends.append(create_ui_command_off(self.packer, use_lta_msg))
+        can_sends.append(create_ui_command_off(self.packer))
 
     if frame % 100 == 0 and CS.CP.enableDsu:
       can_sends.append(create_fcw_command(self.packer, fcw_alert))

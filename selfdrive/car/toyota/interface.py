@@ -291,9 +291,6 @@ class CarInterface(CarInterfaceBase):
     else:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS)
 
-    if candidate in FEATURES["use_lta_msg"]:
-      ret.safetyConfigs[0].safetyParam |= Panda.FLAG_TOYOTA_MADS_LTA_MSG
-
     ret.standStill = False
 
     return ret
