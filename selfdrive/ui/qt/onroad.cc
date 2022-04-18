@@ -480,7 +480,7 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
   }
 
   // current speed
-  configFont(p, "Open Sans", 176, "Bold");
+  configFont(p, "Open Sans", 210, "Bold");
   drawSpeedText(p, rect().center().x(), 210, speed, is_brakelight_on ? QColor(0xff, 0, 0, 255) : QColor(0xff, 0xff, 0xff, 255));
   configFont(p, "Open Sans", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
@@ -886,19 +886,6 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
   int rh = 5;
   int ry = y;
 
-
-  // Add Acceleration from Car
-  // Unit: Meters per Second Squared
-  if (true) {
-    char val_str[16];
-    QColor valueColor = QColor(255, 255, 255, 255);
-
-    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
-
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
-    ry = y + rh;
-  }
-
   // Add Velocity of Primary Lead Car
   // Unit: kph if metric, else mph
   if (true) {
@@ -915,7 +902,19 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
        snprintf(val_str, sizeof(val_str), "-");
      }
 
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "LEAD SPD", speedUnit.toStdString().c_str(), valueColor);
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "RADAR", speedUnit.toStdString().c_str(), valueColor);
+    ry = y + rh;
+  }
+
+  // Add Acceleration from Car
+  // Unit: Meters per Second Squared
+  if (true) {
+    char val_str[16];
+    QColor valueColor = QColor(255, 255, 255, 255);
+
+    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
+
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
     ry = y + rh;
   }
 
@@ -1066,7 +1065,7 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIScene &scene) {
         const cereal::ModelDataV2::XYZTData::Reader &line = (*s->sm)["modelV2"].getModelV2().getLaneLines()[i];
         const float default_pos = 1.4;  // when lane poly isn't available
         const float lane_pos = line.getY().size() > 0 ? std::abs(line.getY()[5]) : default_pos;  // get redder when line is closer to car
-        float hue = 332.5 * lane_pos - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
+        float hue = 332.5 * lane_position - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
         hue = std::fmin(240, fmax(0, hue)) / 360.;  // clip and normalize
         painter.setBrush(QColor::fromRgbF(1.0, 1.0, 1.0, scene.lane_line_probs[i]));
       } else {
