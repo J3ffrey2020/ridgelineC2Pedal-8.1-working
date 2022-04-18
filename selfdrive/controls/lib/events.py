@@ -184,7 +184,7 @@ class NormalPermanentAlert(Alert):
 
 
 class StartupAlert(Alert):
-  def __init__(self, alert_text_1: str, alert_text_2: str = "To use Autosteer, press the LKAS button.", alert_status=AlertStatus.userPrompt):
+  def __init__(self, alert_text_1: str, alert_text_2: str = "To use Autosteer, press cruise main.", alert_status=AlertStatus.userPrompt):
     super().__init__(alert_text_1, alert_text_2,
                      alert_status, AlertSize.mid,
                      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 10.),
@@ -493,7 +493,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.laneChange: {
     ET.WARNING: Alert(
-      "Automatically Changing Lanes",
+      "<<< Auto Lane Change >>>",
       "Check your surroundings.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, .1),
@@ -501,16 +501,16 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
 
   EventName.manualSteeringRequired: {
     ET.WARNING: Alert(
-      "LKAS is OFF",
-      "Manual Steering Required",
+      "Autosteer was turned off!",
+      "Driver is responsible for steering now.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.disengage, 2.),
   },
 
   EventName.manualLongitudinalRequired: {
     ET.WARNING: Alert(
-      "Smart/Adaptive Cruise Control is OFF",
-      "Manual Gas/Brakes Required",
+      "Cruise was turned off!",
+      "Driver is responsible for all pedals now.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.none, 2.),
   },
@@ -518,7 +518,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   EventName.steerSaturated: {
     ET.WARNING: Alert(
       "Steering Torque Limit Reached",
-      "You may need to assist the wheel.",
+      "Driver may be required to navigate this turn.",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOW, VisualAlert.none, AudibleAlert.promptRepeat, 1.),
   },
