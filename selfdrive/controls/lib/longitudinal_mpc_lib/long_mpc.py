@@ -51,7 +51,7 @@ T_DIFFS = np.diff(T_IDXS, prepend=[0.])
 MIN_ACCEL = -3.5
 T_FOLLOW = 1.45
 COMFORT_BRAKE = 2.5
-STOP_DISTANCE = 4.0
+STOP_DISTANCE = 5.5
 
 def get_stopped_equivalence_factor(v_lead, t_follow=T_FOLLOW):
   return (v_lead**2) / (2 * COMFORT_BRAKE)
@@ -235,14 +235,14 @@ class LongitudinalMpc():
     # these were calculated using the test_longitudial.py deceleration tests
     # All tests pass without changing any of the costs, but these small
     # adjustments keep the stopping profile approximately in line with stock.
-    TFs = [0.7, 0.8, T_FOLLOW]
-    x_ego_obstacle_cost_multiplier = interp(self.desired_TF, TFs, [2, 1.3, 1.])
-    j_ego_cost_multiplier = interp(self.desired_TF, TFs, [.1, .8, 1.])
-    d_zone_cost_multiplier = interp(self.desired_TF, TFs, [1.8, 1.3, 1.])
+    TFs = [0.9, 1.25, T_FOLLOW]
+    x_ego_obstacle_cost_multiplier = interp(self.desired_TF, TFs, [.1, .8, 1.])
+    j_ego_cost_multiplier = interp(self.desired_TF, TFs, [.6, .8, 1.])
+    d_zone_cost_multiplier = interp(self.desired_TF, TFs, [1.6, 1.3, 1.])
 
     W = np.asfortranarray(np.diag([X_EGO_OBSTACLE_COST * x_ego_obstacle_cost_multiplier, X_EGO_COST, V_EGO_COST, A_EGO_COST, A_CHANGE_COST, J_EGO_COST * j_ego_cost_multiplier]))
     for i in range(N):
-      W[4,4] = A_CHANGE_COST * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
+      W[4,4] = A_CHANGE_COST * np.interp(T_IDXS[i], [0.0, 0.5, 2.0], [1.0, 1.0, 0.0])
       self.solver.cost_set(i, 'W', W)
     # Setting the slice without the copy make the array not contiguous,
     # causing issues with the C interface.
@@ -314,12 +314,12 @@ class LongitudinalMpc():
     new_TF = T_FOLLOW
     if carstate.distanceLines == 1: # Traffic
       # At slow speeds more time, decrease time up to 60mph
-      # in mph ~= 5     10   15   20  25     30    35     40  45     50    55     60  65     70    75     80  85     90
-      x_vel = [0, 2.25, 4.5, 6.75, 9, 11.25, 13.5, 15.75, 18, 20.25, 22.5, 24.75, 27, 29.25, 31.5, 33.75, 36, 38.25, 40.5]
-      y_dist = [1.4, 1.3, 1.2, 0.9, 0.8, 0.7, 0.57, 0.56, 0.55, 0.54, 0.53, 0.52, 0.51, 0.5, 0.49, 0.48, 0.47, 0.46, 0.45]
+      # in kph ~= 0    10    20     30     40     50     60     90    150
+      x_vel = [0,   2.788,  5.56,  8.333,  11.11, 13.89, 16.67, 25.0, 41.67]
+      y_dist = [1.24, 1.24, 1.27,  1.29,   1.35,  1.35,   1.35,  1.1,  1.3]
       new_TF = np.interp(carstate.vEgo, x_vel, y_dist)
     elif carstate.distanceLines == 2: # Relaxed
-      new_TF = 1.4
+      new_TF = 1.5
     if new_TF != self.desired_TF:
       self.desired_TF = new_TF
       self.set_weights()
