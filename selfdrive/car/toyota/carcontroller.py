@@ -60,7 +60,7 @@ class CarController():
       self.signal_last = cur_time
 
     # Cut steering while we're in a known fault state (2s)
-    if enabled and not CS.steer_not_allowed and CS.lkasEnabled and ((CS.automaticLaneChange and not CS.belowLaneChangeSpeed) or ((not ((cur_time - self.signal_last) < 1) or not CS.belowLaneChangeSpeed) and not (CS.leftBlinkerOn or CS.rightBlinkerOn))):
+    if enabled and not CS.steer_not_allowed and CS.lkasEnabled:
       self.steer_rate_limited = new_steer != apply_steer
       apply_steer_req = 1
     else:
