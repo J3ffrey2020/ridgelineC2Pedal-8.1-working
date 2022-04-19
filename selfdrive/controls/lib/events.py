@@ -221,8 +221,8 @@ def wrong_car_mode_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: boo
 
 def startup_fuzzy_fingerprint_alert(CP: car.CarParams, sm: messaging.SubMaster, metric: bool) -> Alert:
   return Alert(
-    "Welcome to Openpilot",
-    f"To use Autosteer, press the lane-keep-assist button.",
+    "Welcome Back, Walter.",
+    f"Openpilot is now available.",
     AlertStatus.userPrompt, AlertSize.mid,
     Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 10.)
 
