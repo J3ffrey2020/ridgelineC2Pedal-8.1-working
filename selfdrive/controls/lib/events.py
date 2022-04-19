@@ -184,7 +184,7 @@ class NormalPermanentAlert(Alert):
 
 
 class StartupAlert(Alert):
-  def __init__(self, alert_text_1: str, alert_text_2: str = "To use Autosteer, press cruise main.", alert_status=AlertStatus.userPrompt):
+  def __init__(self, alert_text_1: str, alert_text_2: str = "Openpilot is now available.", alert_status=AlertStatus.userPrompt):
     super().__init__(alert_text_1, alert_text_2,
                      alert_status, AlertSize.mid,
                      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 10.),
@@ -288,7 +288,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.startup: {
-    ET.PERMANENT: StartupAlert("Welcome back, Brett.")
+    ET.PERMANENT: StartupAlert("Welcome Back, Brett.")
   },
 
   EventName.startupMaster: {

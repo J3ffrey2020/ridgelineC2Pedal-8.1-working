@@ -480,7 +480,7 @@ void OnroadHud::paintEvent(QPaintEvent *event) {
   }
 
   // current speed
-  configFont(p, "Open Sans", 210, "Bold");
+  configFont(p, "Open Sans", 176, "Bold");
   drawSpeedText(p, rect().center().x(), 210, speed, is_brakelight_on ? QColor(0xff, 0, 0, 255) : QColor(0xff, 0xff, 0xff, 255));
   configFont(p, "Open Sans", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
