@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from common.numpy_fast import interp
 
 # Variables that change braking profiles
-ONE_BAR_DISTANCE = 0.4
-TWO_BAR_DISTANCE = 0.6
-THREE_BAR_DISTANCE = 0.8
-FOUR_BAR_DISTANCE = 1.2
+ONE_BAR_DISTANCE = 0.9
+TWO_BAR_DISTANCE = 1.2
+THREE_BAR_DISTANCE = 1.5
+FOUR_BAR_DISTANCE = 1.8
 STOPPING_DISTANCE = 0.3
 SNG_DISTANCE = 1.8
 SNG_SPEED = 5
