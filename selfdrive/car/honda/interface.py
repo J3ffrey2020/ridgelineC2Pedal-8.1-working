@@ -75,10 +75,10 @@ class CarInterface(CarInterfaceBase):
     # default longitudinal tuning for all hondas
     if Params().get_bool('ChillTune'):
       # default longitudinal tuning for all hondas
-      ret.longitudinalTuning.kpBP = [0., 20., 35.]
-      ret.longitudinalTuning.kpV = [1.2, 1.4, 1.8]
-      ret.longitudinalTuning.kiBP = [0., 20., 35.]
-      ret.longitudinalTuning.kiV = [0.18, 0.30, 0.55]
+      ret.longitudinalTuning.kpBP = [0., 5., 35.]
+      ret.longitudinalTuning.kpV = [1.2, 0.8, 0.5]
+      ret.longitudinalTuning.kiBP = [0., 35.]
+      ret.longitudinalTuning.kiV = [0.18, 0.12]
       
     eps_modified = False
     for fw in car_fw:
