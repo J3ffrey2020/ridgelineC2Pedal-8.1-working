@@ -93,10 +93,13 @@ class CarInterface(CarInterfaceBase):
     elif candidate in (CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
       stop_and_go = True
       ret.wheelbase = 2.82448
-      ret.steerRatio = 13.7
+      ret.steerRatio = 16.88
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
-      set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
+      set_lat_tune(ret.lateralTuning, LatTunes.INDI_PRIUS_TSS2)
+      ret.steerActuatorDelay = 0.2
+      ret.steerRateCost = 1.25
+      ret.steerLimitTimer = 0.5
 
     elif candidate in (CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2):
       stop_and_go = True
