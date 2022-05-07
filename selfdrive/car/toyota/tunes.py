@@ -59,7 +59,7 @@ def set_lat_tune(tune, name, MAX_TORQUE=2.5, FRICTION=.1):
     tune.torque.useSteeringAngle = True
     tune.torque.kp = 1.0 / MAX_TORQUE
     tune.torque.kf = 1.0 / MAX_TORQUE
-    tune.torque.ki = 0.25 / MAX_TORQUE
+    tune.torque.ki = 0.1 / MAX_TORQUE
     tune.torque.friction = FRICTION
   elif name == LatTunes.INDI_PRIUS:
     tune.init('indi')
