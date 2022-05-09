@@ -296,7 +296,7 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.startup: {
-    ET.PERMANENT: StartupAlert(_("Welcome back, Brett"))
+    ET.PERMANENT: StartupAlert(_("Welcome Back."))
   },
 
   EventName.startupMaster: {
