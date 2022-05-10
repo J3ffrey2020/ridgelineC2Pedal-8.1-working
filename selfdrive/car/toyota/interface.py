@@ -91,7 +91,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 13.7
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
-      set_lat_tune(ret.lateralTuning, LatTunes.TORQUE, MAX_TORQUE=2.4, FRICTION=0.05)
+      set_lat_tune(ret.lateralTuning, LatTunes.TORQUE, MAX_TORQUE=2.5, FRICTION=0.05)
 
     elif candidate in (CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2):
       stop_and_go = True
