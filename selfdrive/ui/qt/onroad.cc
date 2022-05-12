@@ -782,7 +782,7 @@ void OnroadHud::drawRightDevUi(QPainter &p, int x, int y) {
 
     snprintf(units_str, sizeof(units_str), "m");
 
-    rh += drawDevUiElementRight(p, x, ry, val_str, "REL DIST", units_str, valueColor);
+    rh += drawDevUiElementRight(p, x, ry, val_str, "DISTANCE", units_str, valueColor);
     ry = y + rh;
   }
 
@@ -892,24 +892,11 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
   int rh = 5;
   int ry = y;
 
-
-  // Add Acceleration from Car
-  // Unit: Meters per Second Squared
-  if (true) {
-    char val_str[16];
-    QColor valueColor = QColor(255, 255, 255, 255);
-
-    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
-
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
-    ry = y + rh;
-  }
-
   // Add Velocity of Primary Lead Car
   // Unit: kph if metric, else mph
   if (true) {
     char val_str[16];
-    QColor valueColor = QColor(255, 255, 255, 255);
+    QColor valueColor = QColor(0, 255, 0, 255);
 
      if (lead_status) {
        if (speedUnit == "mph") {
@@ -921,7 +908,19 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
        snprintf(val_str, sizeof(val_str), "-");
      }
 
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "LEAD SPD", speedUnit.toStdString().c_str(), valueColor);
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "RADAR", speedUnit.toStdString().c_str(), valueColor);
+    ry = y + rh;
+  }
+
+  // Add Acceleration from Car
+  // Unit: Meters per Second Squared
+  if (true) {
+    char val_str[16];
+    QColor valueColor = QColor(255, 255, 255, 255);
+
+    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
+
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
     ry = y + rh;
   }
 
@@ -1064,7 +1063,7 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIScene &scene) {
   int steerOverride = (*s->sm)["carState"].getCarState().getSteeringPressed();
   bool madsEnabled = (*s->sm)["controlsState"].getControlsState().getMadsEnabled();
   bool suspended = (*s->sm)["controlsState"].getControlsState().getSuspended();
-  if (!scene.lateralPlan.dynamicLaneProfileStatus) {
+  if (madsEnabled) {
     // lanelines
     for (int i = 0; i < std::size(scene.lane_line_vertices); ++i) {
       if (i == 1 || i == 2) {
@@ -1073,8 +1072,8 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIScene &scene) {
         const float default_pos = 1.4;  // when lane poly isn't available
         const float lane_pos = line.getY().size() > 0 ? std::abs(line.getY()[5]) : default_pos;  // get redder when line is closer to car
         float hue = 332.5 * lane_pos - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
-        hue = std::fmin(133, fmax(0, hue)) / 360.;  // clip and normalize
-        painter.setBrush(QColor::fromHslF(hue, 1.0, 0.50, scene.lane_line_probs[i]));
+        hue = std::fmin(240, fmax(0, hue)) / 360.;  // clip and normalize
+        painter.setBrush(QColor::fromRgbF(1.0, 1.0, 1.0, scene.lane_line_probs[i]));
       } else {
         painter.setBrush(QColor::fromRgbF(1.0, 1.0, 1.0, scene.lane_line_probs[i]));
       }
