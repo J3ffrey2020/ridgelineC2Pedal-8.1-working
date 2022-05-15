@@ -121,7 +121,7 @@ def create_ui_commands(packer, CP, pcm_speed, hud, is_metric, idx, stock_hud):
       acc_hud_values = {
         'PCM_SPEED': pcm_speed * CV.MS_TO_KPH,
         'PCM_GAS': hud.pcm_accel,
-        'CRUISE_SPEED': 255,
+        'CRUISE_SPEED': hud.v_cruise,
         'ENABLE_MINI_CAR': 1,
         'HUD_LEAD': hud.car,
         'HUD_DISTANCE': 1,    # max distance setting on display
