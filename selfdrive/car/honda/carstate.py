@@ -5,7 +5,7 @@ from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.config import Conversions as CV
 from selfdrive.car.interfaces import CarStateBase
-from selfdrive.car.honda.values import CAR, DBC, STEER_THRESHOLD, HONDA_BOSCH, HONDA_NIDEC_ALT_SCM_MESSAGES, HONDA_BOSCH_ALT_BRAKE_SIGNAL
+from selfdrive.car.honda.values import CAR, DBC, STEER_THRESHOLD, HONDA_BOSCH, HONDA_NIDEC_ALT_SCM_MESSAGES, HONDA_BOSCH_ALT_BRAKE_SIGNAL, CruiseSetting
 from common.params import Params
 
 TransmissionType = car.CarParams.TransmissionType
@@ -194,6 +194,11 @@ class CarState(CarStateBase):
     self.brake_switch_prev_ts = 0
     self.cruise_setting = 0
     self.v_cruise_pcm_prev = 0
+    
+    # Follow distance adjustment
+    self.trMode = 0
+    self.read_distance_lines_prev = 4
+    self.lead_distance = 255
 
     self.acc_mads_combo = None
     self.prev_acc_mads_combo = None
@@ -217,6 +222,7 @@ class CarState(CarStateBase):
     self.prev_cruise_setting = self.cruise_setting
     self.disable_mads = Params().get_bool("DisableMADS")
     self.acc_mads_combo = Params().get_bool("ACCMADSCombo")
+    self.prev_lead_distance = self.lead_distance
 
     # ******************* parse out can *******************
     # TODO: find wheels moving bit in dbc
@@ -343,6 +349,17 @@ class CarState(CarStateBase):
       ret.brakeLights = bool(ret.brakePressed or cp.vl["ACC_CONTROL"]['BRAKE_LIGHTS'] != 0 or ret.brake > 0.4)
     else:
       ret.brakeLights = bool(ret.brakePressed)
+
+    # When user presses distance button on steering wheel. Must be above LKAS button code, cannot be below! (credit: @aragon7777)
+    if self.cruise_setting == CruiseSetting.DISTANCE_ADJ:
+      if cp.vl["SCM_BUTTONS"]["CRUISE_SETTING"] == 0:
+        self.trMode = (self.trMode + 1 ) % 4
+
+    self.prev_cruise_setting = self.cruise_setting
+    self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
+    self.read_distance_lines = self.trMode + 1
+    if self.read_distance_lines != self.read_distance_lines_prev:
+      self.read_distance_lines_prev = self.read_distance_lines
 
     if ret.cruiseState.available:
       if not self.CP.pcmCruise or not self.CP.pcmCruiseSpeed:
