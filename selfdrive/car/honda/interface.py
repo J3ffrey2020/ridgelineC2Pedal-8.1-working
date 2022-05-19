@@ -88,10 +88,10 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalActuatorDelayUpperBound = 0.5 # s
     elif ret.enableGasInterceptor:
       # default longitudinal tuning for all hondas
-      ret.longitudinalTuning.kpBP = [0., 5., 20.]
-      ret.longitudinalTuning.kpV = [1.3, 1.0, 0.7]
-      ret.longitudinalTuning.kiBP = [0., 5., 12., 20., 27.]
-      ret.longitudinalTuning.kiV = [.35, .23, .20, .17, .1]
+      ret.longitudinalTuning.kpBP = [0., 5., 35.]
+      ret.longitudinalTuning.kiBP = [0., 35.]
+      ret.longitudinalTuning.kpV = [3.6, 2.4, 1.5]
+      ret.longitudinalTuning.kiV = [0.54, 0.36]
     else:
       ret.longitudinalTuning.deadzoneBP = [0., 8.05]
       ret.longitudinalTuning.deadzoneV = [.0, .14]
@@ -399,7 +399,7 @@ class CarInterface(CarInterfaceBase):
     ret.rightBlinkerOn = self.CS.rightBlinkerOn
     ret.automaticLaneChange = self.CS.automaticLaneChange
     ret.belowLaneChangeSpeed = self.CS.belowLaneChangeSpeed
-    ret.readdistancelines = self.CS.read_distance_lines
+    ret.distanceLines = self.CS.read_distance_lines
 
     buttonEvents = []
 
