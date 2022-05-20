@@ -361,6 +361,8 @@ class CarState(CarStateBase):
     if self.read_distance_lines != self.read_distance_lines_prev:
       self.read_distance_lines_prev = self.read_distance_lines
 
+    ret.distanceLines = self.read_distance_lines
+
     if ret.cruiseState.available:
       if not self.CP.pcmCruise or not self.CP.pcmCruiseSpeed:
         if self.prev_cruise_buttons == 3: #set
