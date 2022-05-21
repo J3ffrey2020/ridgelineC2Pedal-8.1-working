@@ -782,7 +782,7 @@ void OnroadHud::drawRightDevUi(QPainter &p, int x, int y) {
 
     snprintf(units_str, sizeof(units_str), "m");
 
-    rh += drawDevUiElementRight(p, x, ry, val_str, "REL DIST", units_str, valueColor);
+    rh += drawDevUiElementRight(p, x, ry, val_str, "DISTANCE", units_str, valueColor);
     ry = y + rh;
   }
 
@@ -892,24 +892,11 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
   int rh = 5;
   int ry = y;
 
-
-  // Add Acceleration from Car
-  // Unit: Meters per Second Squared
-  if (true) {
-    char val_str[16];
-    QColor valueColor = QColor(255, 255, 255, 255);
-
-    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
-
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
-    ry = y + rh;
-  }
-
   // Add Velocity of Primary Lead Car
   // Unit: kph if metric, else mph
   if (true) {
     char val_str[16];
-    QColor valueColor = QColor(255, 255, 255, 255);
+    QColor valueColor = QColor(0, 0, 255, 255);
 
      if (lead_status) {
        if (speedUnit == "mph") {
@@ -921,7 +908,19 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
        snprintf(val_str, sizeof(val_str), "-");
      }
 
-    rh += drawDevUiElementLeft(p, x, ry, val_str, "LEAD SPD", speedUnit.toStdString().c_str(), valueColor);
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "RADAR", speedUnit.toStdString().c_str(), valueColor);
+    ry = y + rh;
+  }
+
+  // Add Acceleration from Car
+  // Unit: Meters per Second Squared
+  if (true) {
+    char val_str[16];
+    QColor valueColor = QColor(255, 255, 255, 255);
+
+    snprintf(val_str, sizeof(val_str), "%.1f", aEgo);
+
+    rh += drawDevUiElementLeft(p, x, ry, val_str, "ACCEL", "m/s²", valueColor);
     ry = y + rh;
   }
 
