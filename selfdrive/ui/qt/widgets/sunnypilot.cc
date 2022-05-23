@@ -787,3 +787,4 @@ void CameraOffset::refresh() {
   label.setText(QString::fromStdString(params.get("CameraOffset")));
   btnminus.setText("-");
   btnplus.setText("+");
+}
