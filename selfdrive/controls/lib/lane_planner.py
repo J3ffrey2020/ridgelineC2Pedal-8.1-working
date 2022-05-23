@@ -7,13 +7,14 @@ from selfdrive.hardware import EON, TICI
 from selfdrive.swaglog import cloudlog
 from common.params import Params
 
+TRAJECTORY_SIZE = 33
+# camera offset is meters from center car to camera
+
 # Get offset from param file
 params = Params()
 CameraOffset = int(params.get("CameraOffset", encoding='utf8'))
 # print("User defined Camera Offset value in CM is:", CameraOffset)
 
-TRAJECTORY_SIZE = 33
-# camera offset is meters from center car to camera
 if EON:
   CAMERA_OFFSET = 0.06 + CameraOffset / 100
   PATH_OFFSET = 0.0 + CameraOffset / 100
