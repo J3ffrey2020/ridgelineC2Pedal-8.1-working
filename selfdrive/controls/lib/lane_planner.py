@@ -4,7 +4,7 @@ from common.filter_simple import FirstOrderFilter
 from common.numpy_fast import interp
 from common.realtime import DT_MDL
 from selfdrive.hardware import EON, TICI
-from selfdrive.swaglog import cloudlog\
+from selfdrive.swaglog import cloudlog
 from common.params import Params
 
 # Get offset from param file
