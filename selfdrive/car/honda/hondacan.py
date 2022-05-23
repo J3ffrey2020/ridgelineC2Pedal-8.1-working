@@ -121,7 +121,7 @@ def create_ui_commands(packer, CP, pcm_speed, hud, is_metric, idx, stock_hud):
       acc_hud_values = {
         'PCM_SPEED': pcm_speed * CV.MS_TO_KPH,
         'PCM_GAS': hud.pcm_accel,
-        'CRUISE_SPEED': hud.v_cruise,
+        'CRUISE_SPEED': 255,
         'ENABLE_MINI_CAR': 1,
         'HUD_LEAD': hud.car,
         'HUD_DISTANCE_3': 1 if hud.car != 0 else 0,
