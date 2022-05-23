@@ -896,7 +896,7 @@ void OnroadHud::drawRightDevUi2(QPainter &p, int x, int y) {
   // Unit: kph if metric, else mph
   if (true) {
     char val_str[16];
-    QColor valueColor = QColor(0, 0, 255, 255);
+    QColor valueColor = QColor(0, 255, 0, 255);
 
      if (lead_status) {
        if (speedUnit == "mph") {
