@@ -12,10 +12,6 @@ from common.realtime import DT_CTRL
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
-# constants for fault workaround
-MAX_STEER_RATE = 100  # deg/s
-MAX_STEER_RATE_FRAMES = 19
-
 
 class CarController:
   def __init__(self, dbc_name, CP, VM):
@@ -27,8 +23,6 @@ class CarController:
     self.last_standstill = False
     self.standstill_req = False
     self.steer_rate_limited = False
-
-    self.steer_rate_counter = 0
 
     self.packer = CANPacker(dbc_name)
     self.gas = 0
@@ -74,24 +68,12 @@ class CarController:
     lat_active = CC.latActive and (not CS.belowLaneChangeSpeed or
                    (not ((cur_time - self.signal_last) < 1.0) and not (CS.leftBlinkerOn or CS.rightBlinkerOn)))
 
-    # EPS_STATUS->LKA_STATE either goes to 21 or 25 on rising edge of a steering fault and
-    # the value seems to describe how many frames the steering rate was above 100 deg/s, so
-    # cut torque with some margin for the lower state
-    if lat_active and abs(CS.out.steeringRateDeg) >= MAX_STEER_RATE:
-      self.steer_rate_counter += 1
-    else:
-      self.steer_rate_counter = 0
-
-    apply_steer_req = 1
     if lat_active:
       self.steer_rate_limited = new_steer != apply_steer
-
-    if not lat_active:
+      apply_steer_req = 1
+    else:
       apply_steer = 0
       apply_steer_req = 0
-    elif self.steer_rate_counter >= MAX_STEER_RATE_FRAMES:
-      apply_steer_req = 0
-      self.steer_rate_counter = 0
 
     # TODO: probably can delete this. CS.pcm_acc_status uses a different signal
     # than CS.cruiseState.enabled. confirm they're not meaningfully different
@@ -169,18 +151,25 @@ class CarController:
       # forcing the pcm to disengage causes a bad fault sound so play a good sound instead
       send_ui = True
 
+    use_lta_msg = False
     if CarControllerParams.FEATURE_NO_LKAS_ICON:
-      if CS.persistLkasIconDisabled == 0:
-        self.has_set_lkas = True
+      if CS.CP.carFingerprint in FEATURES["use_lta_msg"]:
+        use_lta_msg = True
+        if CS.persistLkasIconDisabled == 1:
+          self.has_set_lkas = True
+      else:
+        use_lta_msg = False
+        if CS.persistLkasIconDisabled == 0:
+          self.has_set_lkas = True
 
       if self.frame % 100 == 0 or send_ui:
         if not self.has_set_lkas:
-          can_sends.append(create_ui_command_disable_startup_lkas(self.packer))
+          can_sends.append(create_ui_command_disable_startup_lkas(self.packer, use_lta_msg))
 
     if self.frame % 100 == 0 or send_ui:
       can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, hud_control.leftLaneVisible,
                                          hud_control.rightLaneVisible, hud_control.leftLaneDepart,
-                                         hud_control.rightLaneDepart, lat_active, CS.madsEnabled))
+                                         hud_control.rightLaneDepart, lat_active, CS.madsEnabled, use_lta_msg))
 
     self.lat_active = lat_active
 

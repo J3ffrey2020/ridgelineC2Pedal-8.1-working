@@ -109,9 +109,10 @@ class CarState(CarStateBase):
     self.cruise_buttons = cp.vl["PCM_CRUISE"]["CRUISE_STATE"]
     if self.CP.carFingerprint in FEATURES["use_lta_msg"]:
       self.mads_enabled = cp_cam.vl["LKAS_HUD"]["LDA_ON_MESSAGE"]
+      self.persistLkasIconDisabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"] == 1
     else:
       self.mads_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
-    self.persistLkasIconDisabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"] == 0
+      self.persistLkasIconDisabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"] == 0
 
     if self.prev_mads_enabled is None:
       self.prev_mads_enabled = self.mads_enabled
