@@ -1063,7 +1063,7 @@ void NvgWindow::drawLaneLines(QPainter &painter, const UIScene &scene) {
   int steerOverride = (*s->sm)["carState"].getCarState().getSteeringPressed();
   bool madsEnabled = (*s->sm)["controlsState"].getControlsState().getMadsEnabled();
   bool suspended = (*s->sm)["controlsState"].getControlsState().getSuspended();
-  if (!scene.lateralPlan.dynamicLaneProfileStatus) {
+  if (madsEnabled) {
     // lanelines
     for (int i = 0; i < std::size(scene.lane_line_vertices); ++i) {
       if (i == 1 || i == 2) {
