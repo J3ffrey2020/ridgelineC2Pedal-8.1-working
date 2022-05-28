@@ -12,7 +12,7 @@ VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
-    self.torque_rate_limits = CarControllerParams(CP)
+    #self.torque_rate_limits = CarControllerParams(CP)
     self.last_steer = 0
     self.alert_active = False
     self.last_standstill = False
@@ -46,7 +46,7 @@ class CarController():
 
     # steer torque
     new_steer = int(round(actuators.steer * CarControllerParams.STEER_MAX))
-    apply_steer = apply_toyota_steer_torque_limits(new_steer, self.last_steer, CS.out.steeringTorqueEps, self.torque_rate_limits)
+    apply_steer = apply_toyota_steer_torque_limits(new_steer, self.last_steer, CS.out.steeringTorqueEps, CarControllerParams)
     self.steer_rate_limited = new_steer != apply_steer
 
     # Cut steering while we're in a known fault state (2s)
