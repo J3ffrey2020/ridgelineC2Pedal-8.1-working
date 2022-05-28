@@ -501,8 +501,6 @@ class Controls:
         if self.state == State.enabled:
           if not self.CP.pcmCruise and CS.cruiseState.enabled and (not self.cruiseState_enabled_last):
             self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
-          elif (self.CP.pcmCruise and not self.CP.pcmCruiseSpeed) and CS.cruiseState.enabled and (not self.cruiseState_enabled_last):
-            self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
           if self.events.any(ET.SOFT_DISABLE):
             self.state = State.softDisabling
             self.soft_disable_timer = int(SOFT_DISABLE_TIME / DT_CTRL)
@@ -540,8 +538,6 @@ class Controls:
             self.state = State.enabled
           self.current_alert_types.append(ET.ENABLE)
           if not self.CP.pcmCruise and CS.cruiseState.enabled:
-            self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
-          elif (self.CP.pcmCruise and not self.CP.pcmCruiseSpeed) and CS.cruiseState.enabled:
             self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
 
     self.cruiseState_enabled_last = CS.cruiseState.enabled
@@ -616,7 +612,7 @@ class Controls:
         left_deviation = actuators.steer > 0 and lat_plan.dPathPoints[0] < -0.20
         right_deviation = actuators.steer < 0 and lat_plan.dPathPoints[0] > 0.20
 
-        if left_deviation or right_deviation:
+        if (left_deviation or right_deviation) and CS.lkasEnabled:
           self.events.add(EventName.steerSaturated)
 
     # Ensure no NaNs/Infs
