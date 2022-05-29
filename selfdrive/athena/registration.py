@@ -4,6 +4,7 @@ import json
 import jwt
 from pathlib import Path
 
+import random, string
 from datetime import datetime, timedelta
 from common.api import api_get
 from common.params import Params
@@ -71,7 +72,7 @@ def register(show_spinner=False) -> str:
           dongle_id = UNREGISTERED_DONGLE_ID
         else:
           dongleauth = json.loads(resp.text)
-          dongle_id = dongleauth["dongle_id"]
+          dongle_id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=16))
         break
       except Exception:
         cloudlog.exception("failed to authenticate")
