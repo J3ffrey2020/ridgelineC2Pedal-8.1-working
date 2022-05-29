@@ -182,6 +182,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"TorqueFriction", PERSISTENT},
     {"TorqueMaxLatAccel", PERSISTENT},
     {"TorqueUseSteeringAngle", PERSISTENT},
+    {"ToyotaSpeedFix", PERSISTENT},
     {"TrainingVersion", PERSISTENT},
     {"TurnSpeedControl", PERSISTENT},
     {"TurnVisionControl", PERSISTENT},

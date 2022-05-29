@@ -72,6 +72,12 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "In this mode openpilot will ignore lanelines and just drive how it thinks a human would.",
       "../assets/offroad/icon_road.png",
     },
+    {
+      "ToyotaSpeedFix",
+      "Toyota: Set Speed Fix",
+      "Aligns the set speed on the dash and openpilot for the 2022 Toyota Camry. May cause revving and PCM issues on other cars.",
+      "../assets/offroad/icon_openpilot.png",
+    },
 #ifdef ENABLE_MAPS
     {
       "NavSettingTime24h",

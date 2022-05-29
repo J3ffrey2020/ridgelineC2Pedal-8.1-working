@@ -738,6 +738,14 @@ class Controls:
                                ((not CS.belowLaneChangeSpeed) or ((not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))))))
     controlsState.distanceTraveled = self.distance_traveled
 
+    if Params().get_bool('ToyotaSpeedFix'):
+      # 2018 Honda Civic Speed Offset
+      if self.v_cruise_kph != 255:
+        controlsState.vCruise = controlsState.vCruise * 1.0330 # Align set speed on dash and openpilot for Toyotas. Might cause PCM issues
+    else:
+      if self.v_cruise_kph != 255:
+        controlsState.vCruise = controlsState.vCruise * 1.0000
+
     if self.joystick_mode:
       controlsState.lateralControlState.debugState = lac_log
     elif self.CP.steerControlType == car.CarParams.SteerControlType.angle:

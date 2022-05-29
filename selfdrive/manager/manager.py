@@ -67,6 +67,7 @@ def manager_init():
     ("TorqueFriction", "0.1"),
     ("TorqueMaxLatAccel", "25"),
     ("TorqueUseSteeringAngle", "1"),
+    ('ToyotaSpeedFix', "0"),
     ("TurnSpeedControl", "0"),
     ("TurnVisionControl", "0"),
   ]
