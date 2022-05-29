@@ -1,1 +1,1 @@
-#define COMMA_VERSION "0.8.12-civic"
+#define COMMA_VERSION "0.8.12-toyota"
