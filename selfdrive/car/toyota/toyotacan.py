@@ -67,7 +67,7 @@ def create_fcw_command(packer, fcw):
   return packer.make_can_msg("ACC_HUD", 0, values)
 
 
-def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_depart, right_lane_depart, faded_line, use_lta_msg):
+def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_depart, right_lane_depart, faded_line):
   values = {
     "RIGHT_LINE": 2 if faded_line else 3 if right_lane_depart else 1 if right_line else 2,
     "LEFT_LINE": 2 if faded_line else 3 if left_lane_depart else 1 if left_line else 2,
@@ -81,11 +81,11 @@ def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_dep
     "REPEATED_BEEPS": 0,
     "TWO_BEEPS": chime,
     "LDA_ALERT": steer,
-    "LDA_ON_MESSAGE": 1 if use_lta_msg else 0,
+    "LDA_ON_MESSAGE": 1,
   }
   return packer.make_can_msg("LKAS_HUD", 0, values)
 
-def create_ui_command_off(packer, use_lta_msg):
+def create_ui_command_off(packer):
   values = {
     "RIGHT_LINE": 0,
     "LEFT_LINE": 0,
@@ -94,18 +94,18 @@ def create_ui_command_off(packer, use_lta_msg):
     "SET_ME_X2C": 0x34,
     "SET_ME_X38": 0x00,
     "SET_ME_X02": 0x12,
-    "SET_ME_X01": 1 if use_lta_msg else 0,
+    "SET_ME_X01": 1,
     "SET_ME_X01_2": 1,
     "REPEATED_BEEPS": 0,
     "TWO_BEEPS": 0,
     "LDA_ALERT": 0,
-    "LDA_ON_MESSAGE": 2 if use_lta_msg else 0,
+    "LDA_ON_MESSAGE": 2,
   }
   return packer.make_can_msg("LKAS_HUD", 0, values)
 
-def create_ui_command_disable_startup_lkas(packer, use_lta_msg):
+def create_ui_command_disable_startup_lkas(packer):
   values = {
-    "SET_ME_X01": 1 if use_lta_msg else 0, # LKAS not enabled
-    "LDA_ON_MESSAGE": 2 if use_lta_msg else 0,
+    "SET_ME_X01": 1, # LKAS not enabled
+    "LDA_ON_MESSAGE": 2,
   }
   return packer.make_can_msg("LKAS_HUD", 0, values)
