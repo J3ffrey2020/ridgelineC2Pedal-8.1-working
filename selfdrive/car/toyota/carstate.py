@@ -6,7 +6,7 @@ from opendbc.can.can_define import CANDefine
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from selfdrive.config import Conversions as CV
-from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR, FEATURES
+from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR
 from common.params import Params
 
 
@@ -41,12 +41,11 @@ class CarState(CarStateBase):
     self.lkas_enabled = None
     self.prev_lkas_enabled = None
 
-    self.acc_mads_combo = None
-    self.prev_acc_mads_combo = None
-
     self.cruiseState_standstill = False
 
-    # KRKeegan - Add support for toyota distance button
+    self.acc_mads_combo = None
+    self.prev_acc_mads_combo = None
+    
     self.distance_btn = 0
 
   def update(self, cp, cp_cam):
@@ -81,7 +80,7 @@ class CarState(CarStateBase):
     ret.vEgoRaw = mean([ret.wheelSpeeds.fl, ret.wheelSpeeds.fr, ret.wheelSpeeds.rl, ret.wheelSpeeds.rr])
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
 
-    self.belowLaneChangeSpeed = ret.vEgo < (30 * CV.MPH_TO_MS)
+    self.belowLaneChangeSpeed = ret.vEgo < (0.00 * CV.MPH_TO_MS)
 
     ret.standstill = ret.vEgoRaw < 0.001
     ret.standStill = self.CP.standStill
@@ -284,8 +283,8 @@ class CarState(CarStateBase):
 
     # KRKeegan - Add support for toyota distance button
     if CP.carFingerprint in TSS2_CAR:
-      signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM"))
-      checks.append(("PCM_CRUISE_SM", 0))
+      signals.append(("DISTANCE_LINES", "PCM_CRUISE_SM", 0))
+      checks.append(("PCM_CRUISE_SM", 1))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
@@ -313,3 +312,4 @@ class CarState(CarStateBase):
       signals.append(("DISTANCE", "ACC_CONTROL", 0)),
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2, enforce_checks=False)
+    
