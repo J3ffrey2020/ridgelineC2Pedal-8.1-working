@@ -501,8 +501,6 @@ class Controls:
         if self.state == State.enabled:
           if not self.CP.pcmCruise and CS.cruiseState.enabled and (not self.cruiseState_enabled_last):
             self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
-          elif (self.CP.pcmCruise and not self.CP.pcmCruiseSpeed) and CS.cruiseState.enabled and (not self.cruiseState_enabled_last):
-            self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
           if self.events.any(ET.SOFT_DISABLE):
             self.state = State.softDisabling
             self.soft_disable_timer = int(SOFT_DISABLE_TIME / DT_CTRL)
@@ -540,8 +538,6 @@ class Controls:
             self.state = State.enabled
           self.current_alert_types.append(ET.ENABLE)
           if not self.CP.pcmCruise and CS.cruiseState.enabled:
-            self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
-          elif (self.CP.pcmCruise and not self.CP.pcmCruiseSpeed) and CS.cruiseState.enabled:
             self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
 
     self.cruiseState_enabled_last = CS.cruiseState.enabled
@@ -616,7 +612,7 @@ class Controls:
         left_deviation = actuators.steer > 0 and lat_plan.dPathPoints[0] < -0.20
         right_deviation = actuators.steer < 0 and lat_plan.dPathPoints[0] > 0.20
 
-        if left_deviation or right_deviation:
+        if (left_deviation or right_deviation) and CS.lkasEnabled:
           self.events.add(EventName.steerSaturated)
 
     # Ensure no NaNs/Infs
@@ -653,7 +649,7 @@ class Controls:
       CC.roll = self.sm['liveLocationKalman'].orientationNED.value[0]
       CC.pitch = self.sm['liveLocationKalman'].orientationNED.value[1]
 
-    CC.cruiseControl.cancel = CS.cruiseState.enabled and (not self.enabled or not self.CP.pcmCruise)
+    CC.cruiseControl.cancel = CS.cruiseState.enabled and (not self.enabled)
     if self.joystick_mode and self.sm.rcv_frame['testJoystick'] > 0 and self.sm['testJoystick'].buttons[0]:
       CC.cruiseControl.cancel = True
 
@@ -741,6 +737,14 @@ class Controls:
                                (CS.vEgo > self.CP.minSteerSpeed) and (CS.lfaEnabled or CS.accMainEnabled or CS.lkasEnabled) and
                                ((not CS.belowLaneChangeSpeed) or ((not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))))))
     controlsState.distanceTraveled = self.distance_traveled
+
+    if Params().get_bool('ToyotaSpeedFix'):
+      # 2018 Honda Civic Speed Offset
+      if self.v_cruise_kph != 255:
+        controlsState.vCruise = controlsState.vCruise * 1.0330 # Align set speed on dash and openpilot for Toyotas. Might cause PCM issues
+    else:
+      if self.v_cruise_kph != 255:
+        controlsState.vCruise = controlsState.vCruise * 1.0000
 
     if self.joystick_mode:
       controlsState.lateralControlState.debugState = lac_log

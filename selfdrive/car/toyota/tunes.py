@@ -43,8 +43,8 @@ def set_long_tune(tune, name):
     tune.deadzoneV = [0., .15]
     tune.kpBP = [0., 5., 35.]
     tune.kiBP = [0., 35.]
-    tune.kpV = [3.6, 2.4, 1.5]
-    tune.kiV = [0.54, 0.36]
+    tune.kpV = [.9, .6, .375]
+    tune.kiV = [0.27, 0.18]
   else:
     raise NotImplementedError('This longitudinal tune does not exist')
 
@@ -54,9 +54,9 @@ def set_lat_tune(tune, name, MAX_TORQUE=2.5, FRICTION=.1):
   if name == LatTunes.TORQUE:
     tune.init('torque')
     tune.torque.useSteeringAngle = True
-    tune.torque.kp = 2.0 / MAX_TORQUE
+    tune.torque.kp = 1.0 / MAX_TORQUE
     tune.torque.kf = 1.0 / MAX_TORQUE
-    tune.torque.ki = 0.5 / MAX_TORQUE
+    tune.torque.ki = 0.1 / MAX_TORQUE
     tune.torque.friction = FRICTION
   elif name == LatTunes.INDI_PRIUS:
     tune.init('indi')
