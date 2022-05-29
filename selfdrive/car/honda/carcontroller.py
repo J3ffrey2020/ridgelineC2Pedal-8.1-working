@@ -97,7 +97,7 @@ def process_hud_alert(hud_alert):
 
 HUDData = namedtuple("HUDData",
                      ["pcm_accel", "v_cruise", "car",
-                     "lanes", "fcw", "acc_alert", "steer_required", "dashed_lanes"])
+                     "lanes", "fcw", "acc_alert", "steer_required", "dist_lines", "dashed_lanes"])
 
 
 class CarController():
@@ -332,7 +332,7 @@ class CarController():
             # Sending non-zero gas when OP is not enabled will cause the PCM not to respond to throttle as expected
             # when you do enable.
             if active and CS.out.cruiseState.enabled:
-              self.gas = clip(gas_mult * (gas - brake + wind_brake*3/4), 0., 1.)
+              self.gas = clip(gas_mult * gas, 0., 1.)
             else:
               self.gas = 0.0
             can_sends.append(create_gas_interceptor_command(self.packer, self.gas, idx))
@@ -351,7 +351,7 @@ class CarController():
     if (frame % 10) == 0:
       idx = (frame//10) % 4
       hud = HUDData(int(pcm_accel), int(round(hud_v_cruise)), hud_car,
-                    hud_show_lanes and lkas_active, fcw_display, acc_alert, steer_required, CS.lkasEnabled and not lkas_active)
+                    hud_show_lanes and lkas_active, fcw_display, acc_alert, steer_required, CS.read_distance_lines, CS.lkasEnabled and not lkas_active)
       can_sends.extend(hondacan.create_ui_commands(self.packer, CS.CP, pcm_speed, hud, CS.is_metric, idx, CS.stock_hud))
 
       if (CS.CP.openpilotLongitudinalControl) and (CS.CP.carFingerprint not in HONDA_BOSCH):

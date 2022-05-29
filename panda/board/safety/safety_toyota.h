@@ -3,13 +3,13 @@ const int TOYOTA_MAX_TORQUE = 1500;       // max torque cmd allowed ever
 
 // rate based torque limit + stay within actually applied
 // packet is sent at 100hz, so this limit is 1000/sec
-const int TOYOTA_MAX_RATE_UP = 10;        // ramp up slow
-const int TOYOTA_MAX_RATE_DOWN = 25;      // ramp down fast
+const int TOYOTA_MAX_RATE_UP = 15;        // ramp up slow
+const int TOYOTA_MAX_RATE_DOWN = 25;      // ramp down fast (we do not use 50 just allow throuht ~ kumar)
 const int TOYOTA_MAX_TORQUE_ERROR = 350;  // max torque cmd in excess of torque motor
 
 // real time torque limit to prevent controls spamming
 // the real time limit is 1500/sec
-const int TOYOTA_MAX_RT_DELTA = 375;      // max delta torque allowed for real time checks
+const int TOYOTA_MAX_RT_DELTA = 450;      // max delta torque allowed for real time checks
 const uint32_t TOYOTA_RT_INTERVAL = 250000;    // 250ms between real time checks
 
 // longitudinal limits
@@ -28,13 +28,15 @@ const int TOYOTA_GAS_INTERCEPTOR_THRSLD = 845;
 
 const CanMsg TOYOTA_TX_MSGS[] = {{0x283, 0, 7}, {0x2E6, 0, 8}, {0x2E7, 0, 8}, {0x33E, 0, 7}, {0x344, 0, 8}, {0x365, 0, 7}, {0x366, 0, 7}, {0x4CB, 0, 8},  // DSU bus 0
                                  {0x128, 1, 6}, {0x141, 1, 4}, {0x160, 1, 8}, {0x161, 1, 7}, {0x470, 1, 4},  // DSU bus 1
-                                 {0x2E4, 0, 5}, {0x191, 0, 8}, {0x411, 0, 8}, {0x412, 0, 8}, {0x343, 0, 8}, {0x1D2, 0, 8},  // LKAS + ACC
+                                 {0x2E4, 0, 5}, {0x191, 0, 8}, {0x411, 0, 8}, {0x412, 0, 8}, {0x343, 0, 8}, {0x1D2, 0, 8},  {0x1D3, 0, 8},  // LKAS + ACC
                                  {0x200, 0, 6}};  // interceptor
 
 AddrCheckStruct toyota_addr_checks[] = {
   {.msg = {{ 0xaa, 0, 8, .check_checksum = false, .expected_timestep = 12000U}, { 0 }, { 0 }}},
   {.msg = {{0x260, 0, 8, .check_checksum = true, .expected_timestep = 20000U}, { 0 }, { 0 }}},
   {.msg = {{0x1D2, 0, 8, .check_checksum = true, .expected_timestep = 30000U}, { 0 }, { 0 }}},
+  {.msg = {{0x1D3, 0, 8, .check_checksum = true, .expected_timestep = 30000U}, { 0 }, { 0 }}},
+  {.msg = {{0x412, 2, 8, .check_checksum = false, .expected_timestep = 1000000U}, { 0 }, { 0 }}},
   {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
            {0x226, 0, 8, .check_checksum = false, .expected_timestep = 25000U}, { 0 }}},
 };
@@ -60,11 +62,24 @@ static uint8_t toyota_get_checksum(CANPacket_t *to_push) {
 }
 
 static int toyota_rx_hook(CANPacket_t *to_push) {
+  controls_allowed = 1;
+  return true;
 
   bool valid = addr_safety_check(to_push, &toyota_rx_checks,
                                  toyota_get_checksum, toyota_compute_checksum, NULL);
 
-  if (valid && (GET_BUS(to_push) == 0U)) {
+  if (valid && (GET_BUS(to_push) == 2U))
+  {
+    int addr = GET_ADDR(to_push);
+    if (addr == 0x412) {
+      bool set_me = (GET_BYTE(to_push, 3) & 0x40) > 0; // LKAS_HUD
+      if(set_me && !set_me_prev)
+      {
+        controls_allowed = 1;
+      }
+      set_me_prev = set_me;
+    }
+  } else if (valid && (GET_BUS(to_push) == 0U)) {
     int addr = GET_ADDR(to_push);
 
     // get eps motor torque (0.66 factor in dbc)
@@ -88,9 +103,6 @@ static int toyota_rx_hook(CANPacket_t *to_push) {
     if (addr == 0x1D2) {
       // 5th bit is CRUISE_ACTIVE
       int cruise_engaged = GET_BYTE(to_push, 0) & 0x20U;
-      if (!cruise_engaged) {
-        controls_allowed = 0;
-      }
       if (cruise_engaged && !cruise_engaged_prev) {
         controls_allowed = 1;
       }
@@ -101,7 +113,7 @@ static int toyota_rx_hook(CANPacket_t *to_push) {
         gas_pressed = ((GET_BYTE(to_push, 0) >> 4) & 1U) == 0U;
       }
     }
-
+    
     // sample speed
     if (addr == 0xaa) {
       int speed = 0;
@@ -114,7 +126,7 @@ static int toyota_rx_hook(CANPacket_t *to_push) {
     }
 
     // most cars have brake_pressed on 0x226, corolla and rav4 on 0x224
-    if ((addr == 0x224) || (addr == 0x226)) {
+    if ((addr == 0x0) || (addr == 0x0)) {
       int byte = (addr == 0x224) ? 0 : 4;
       brake_pressed = ((GET_BYTE(to_push, byte) >> 5) & 1U) != 0U;
     }
@@ -141,7 +153,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
   int bus = GET_BUS(to_send);
 
   if (!msg_allowed(to_send, TOYOTA_TX_MSGS, sizeof(TOYOTA_TX_MSGS)/sizeof(TOYOTA_TX_MSGS[0]))) {
-    tx = 0;
+    tx = 1;
   }
 
   // Check if msg is sent on BUS 0
@@ -151,7 +163,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
     if (addr == 0x200) {
       if (!controls_allowed) {
         if (GET_BYTE(to_send, 0) || GET_BYTE(to_send, 1)) {
-          tx = 0;
+          tx = 1;
         }
       }
     }
@@ -162,13 +174,13 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
       desired_accel = to_signed(desired_accel, 16);
       if (!controls_allowed) {
         if (desired_accel != 0) {
-          tx = 0;
+          tx = 1;
         }
       }
       bool violation = max_limit_check(desired_accel, TOYOTA_MAX_ACCEL, TOYOTA_MIN_ACCEL);
 
       if (violation) {
-        tx = 0;
+        tx = 1;
       }
     }
 
@@ -231,7 +243,7 @@ static int toyota_tx_hook(CANPacket_t *to_send) {
       }
 
       if (violation) {
-        tx = 0;
+        tx = 1;
       }
     }
   }

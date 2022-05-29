@@ -8,7 +8,7 @@ from common.params import Params
 
 # WARNING: this value was determined based on the model's training distribution,
 #          model predictions above this speed can be unpredictable
-V_CRUISE_MAX = 145  # kph
+V_CRUISE_MAX = 200  # kph
 V_CRUISE_MIN = 5  # kph
 V_CRUISE_DELTA = 5
 V_CRUISE_ENABLE_MIN = 40  # kph
@@ -137,7 +137,6 @@ def update_v_cruise_speed(v_cruise_kph, buttonEvents, enabled, cur_time, accel_p
     v_cruise_kph = clip(v_cruise_kph, V_CRUISE_MIN, V_CRUISE_MAX)
 
   return v_cruise_kph
-
 
 def initialize_v_cruise(v_ego, buttonEvents, v_cruise_last):
   for b in buttonEvents:
