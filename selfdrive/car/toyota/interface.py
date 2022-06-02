@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from cereal import car
 from panda import Panda
+from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
 from selfdrive.car.toyota.tunes import LatTunes, LongTunes, set_long_tune, set_lat_tune
 from selfdrive.car.toyota.values import CruiseButtons, Ecu, CAR, TSS2_CAR, NO_DSU_CAR, MIN_ACC_SPEED, CarControllerParams, FEATURES
@@ -16,7 +17,13 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
-    return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
+    if CP.carFingerprint in TSS2_CAR:
+      # Allow for higher accel from PID controller at low speeds
+      return CarControllerParams.ACCEL_MIN, interp(current_speed,
+                                                   CarControllerParams.ACCEL_MAX_TSS2_BP,
+                                                   CarControllerParams.ACCEL_MAX_TSS2_VALS)
+    else:
+      return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
 
   @staticmethod
   def get_params(candidate, fingerprint=gen_empty_fingerprint(), car_fw=[]):  # pylint: disable=dangerous-default-value
@@ -105,7 +112,7 @@ class CarInterface(CarInterfaceBase):
     elif candidate in [CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2]:
       stop_and_go = True
       ret.wheelbase = 2.82448
-      ret.steerRatio = 14.02
+      ret.steerRatio = 13.7
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
       if candidate in (CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
@@ -279,13 +286,10 @@ class CarInterface(CarInterfaceBase):
                        CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2, CAR.PRIUS_TSS2]:
       set_long_tune(ret.longitudinalTuning, LongTunes.TSS2)
       # Improved longitudinal tune settings from sshane
-      ret.minSpeedCan = 0.2   # This shouldn't be higher than vEgoStopping
+      # Improved longitudinal tune settings from sshane
       ret.vEgoStopping = 0.2  # car is near 0.1 to 0.2 when car starts requesting stopping accel
       ret.vEgoStarting = 0.2  # needs to be > or == vEgoStopping
-      ret.startAccel = 0.0  # Toyota requests 0 instantly, then hands control off to some controller
-      ret.stopAccel = -2.0  # Toyota requests -0.4 when stopped
-      ret.stoppingDecelRate = 0.8  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
-      ret.startingAccelRate = 20.  # release brakes fast
+      ret.stoppingDecelRate = 0.4  # reach stopping target smoothly - seems to take 0.5 seconds to go from 0 to -0.4
       ret.longitudinalActuatorDelayLowerBound = 0.3
       ret.longitudinalActuatorDelayUpperBound = 0.3
     else:
