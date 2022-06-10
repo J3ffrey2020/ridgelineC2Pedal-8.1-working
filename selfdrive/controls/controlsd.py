@@ -741,7 +741,7 @@ class Controls:
     if Params().get_bool('ToyotaSpeedFix'):
       # 2018 Honda Civic Speed Offset
       if self.v_cruise_kph != 255:
-        controlsState.vCruise = controlsState.vCruise * 1.035 # Align set speed on dash and openpilot for Toyotas. Might cause PCM issues
+        controlsState.vCruise = controlsState.vCruise * 1.0330 # Align set speed on dash and openpilot for Toyotas. Might cause PCM issues
     else:
       if self.v_cruise_kph != 255:
         controlsState.vCruise = controlsState.vCruise * 1.0000
