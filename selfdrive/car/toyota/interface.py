@@ -19,9 +19,9 @@ class CarInterface(CarInterfaceBase):
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     if CP.carFingerprint in TSS2_CAR:
       # Allow for higher accel from PID controller at low speeds
-      return CarControllerParams.ACCEL_MIN, interp(current_speed,
-                                                   CarControllerParams.ACCEL_MAX_TSS2_BP,
-                                                   CarControllerParams.ACCEL_MAX_TSS2_VALS)
+      ACCEL_MAX_VALS = [CarControllerParams.ACCEL_MAX, 0.45]
+      ACCEL_MAX_BP = [cruise_speed - 2.2, cruise_speed - .2]
+      return CarControllerParams.ACCEL_MIN, interp(current_speed, ACCEL_MAX_BP, ACCEL_MAX_VALS)
     else:
       return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
 
