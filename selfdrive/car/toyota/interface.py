@@ -19,9 +19,9 @@ class CarInterface(CarInterfaceBase):
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     if CP.carFingerprint in TSS2_CAR:
       # Allow for higher accel from PID controller at low speeds
-      ACCEL_MAX_VALS = [CarControllerParams.ACCEL_MAX, 0.45]
-      ACCEL_MAX_BP = [cruise_speed - 2.2, cruise_speed - .2]
-      return CarControllerParams.ACCEL_MIN, interp(current_speed, ACCEL_MAX_BP, ACCEL_MAX_VALS)
+      return CarControllerParams.ACCEL_MIN, interp(current_speed,
+                                                   CarControllerParams.ACCEL_MAX_TSS2_BP,
+                                                   CarControllerParams.ACCEL_MAX_TSS2_VALS)
     else:
       return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
 
@@ -112,13 +112,10 @@ class CarInterface(CarInterfaceBase):
     elif candidate in [CAR.CAMRY, CAR.CAMRYH, CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2]:
       stop_and_go = True
       ret.wheelbase = 2.82448
-      ret.steerRatio = 13.7
+      ret.steerRatio = 15.77
       tire_stiffness_factor = 0.7933
       ret.mass = 3400. * CV.LB_TO_KG + STD_CARGO_KG  # mean between normal and hybrid
-      if candidate in (CAR.CAMRY_TSS2, CAR.CAMRYH_TSS2):
-        set_lat_tune(ret.lateralTuning, LatTunes.TORQUE, MAX_TORQUE=2.3125, FRICTION=0.05)
-      else:
-        set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
+      set_lat_tune(ret.lateralTuning, LatTunes.PID_C)
 
     elif candidate in [CAR.HIGHLANDER_TSS2, CAR.HIGHLANDERH_TSS2]:
       stop_and_go = True
