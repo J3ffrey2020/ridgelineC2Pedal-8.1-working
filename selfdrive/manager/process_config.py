@@ -18,7 +18,7 @@ def logging(started, params, CP: car.CarParams) -> bool:
   return started and run
 
 procs = [
-  #DaemonProcess("manage_athenad", "selfdrive.athena.manage_athenad", "AthenadPid"),
+  DaemonProcess("manage_athenad", "selfdrive.athena.manage_athenad", "AthenadPid"),
   # due to qualcomm kernel bugs SIGKILLing camerad sometimes causes page table corruption
   NativeProcess("camerad", "selfdrive/camerad", ["./camerad"], unkillable=True, callback=driverview),
   NativeProcess("clocksd", "selfdrive/clocksd", ["./clocksd"]),
