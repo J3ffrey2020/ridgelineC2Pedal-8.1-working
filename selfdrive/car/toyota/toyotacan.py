@@ -77,7 +77,7 @@ def create_ui_command(packer, steer, chime, left_line, right_line, left_lane_dep
     "LEFT_LINE": 0 if not mads_enabled else 2 if faded_line else 3 if left_lane_depart else 1 if left_line else 2,
     "BARRIERS" : 1 if lat_active else 0,
     "LKAS_STATUS": 2 if mads_enabled else 1 if use_lta_msg and not mads_enabled else 0,
-    "LDA_ON_MESSAGE": 0,
+    "LDA_ON_MESSAGE": 1 if use_lta_msg and mads_enabled else 2 if use_lta_msg and not mads_enabled else 0,
 
     # static signals
     "SET_ME_X02": 2,
