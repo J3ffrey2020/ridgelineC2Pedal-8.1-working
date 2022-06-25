@@ -430,7 +430,7 @@ void panda_state_thread(PubMaster *pm, std::vector<Panda *> pandas, bool spoofin
   util::set_thread_name("boardd_panda_state");
 
   Params params;
-  SubMaster sm({"controlsState", "carControl", "carState"});
+  SubMaster sm({"controlsState"});
 
   Panda *peripheral_panda = pandas[0];
   bool ignition_last = false;
@@ -475,7 +475,7 @@ void panda_state_thread(PubMaster *pm, std::vector<Panda *> pandas, bool spoofin
     ignition_last = ignition;
 
     sm.update(0);
-    const bool engaged = sm.allAliveAndValid({"controlsState"}) && (sm["controlsState"].getControlsState().getEnabled() || sm["carControl"].getCarControl().getLatActive() || sm["carControl"].getCarControl().getLongActive() || sm["carState"].getCarState().getMadsEnabled());
+    const bool engaged = sm.allAliveAndValid({"controlsState"}) && sm["controlsState"].getControlsState().getEnabled();
 
     for (const auto &panda : pandas) {
       panda->send_heartbeat(engaged);
