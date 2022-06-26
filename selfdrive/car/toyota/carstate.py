@@ -200,15 +200,17 @@ class CarState(CarStateBase):
 
     if ret.cruiseState.available:
       if self.gap_adjust_cruise:
-        if self.gap_adjust_cruise_mode in (0, 2):
-          if self.CP.carFingerprint in RADAR_ACC_CAR:
-            self.gap_adjust_cruise_tr_line = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
-          elif self.CP.carFingerprint in TSS2_CAR:
+        if self.gap_adjust_cruise_mode == 0 or self.gap_adjust_cruise_mode == 2:
+          if self.CP.carFingerprint in RADAR_ACC_CAR or TSS2_CAR:
             self.gap_adjust_cruise_tr_line = 1 if cp_cam.vl["ACC_CONTROL"]["DISTANCE"] == 1 else 0
           elif self.CP.smartDsu:
             self.gap_adjust_cruise_tr_line = 1 if cp.vl["SDSU"]["FD_BUTTON"] == 1 else 0
           self.gap_adjust_cruise_tr = int(cp.vl["PCM_CRUISE_SM"]["DISTANCE_LINES"])
-          Params().put("GapAdjustCruiseTr", str(self.gap_adjust_cruise_tr))
+          ret.gapAdjustCruiseTr = self.gap_adjust_cruise_tr
+          if self.gap_adjust_cruise_mode == 2:
+            Params().put("GapAdjustCruiseTr", str(self.gap_adjust_cruise_tr))
+        elif self.gap_adjust_cruise_mode == 1:
+          ret.gapAdjustCruiseTr = self.gap_adjust_cruise_tr
       if self.enable_mads:
         if not self.prev_mads_enabled and self.mads_enabled:
           self.madsEnabled = True
@@ -227,8 +229,6 @@ class CarState(CarStateBase):
           self.prev_acc_mads_combo = ret.cruiseState.enabled
     else:
       self.madsEnabled = False
-
-    ret.gapAdjustCruiseTr = self.gap_adjust_cruise_tr
 
     if self.prev_cruise_buttons != 0: # CANCEL
       if self.cruise_buttons == 0:
