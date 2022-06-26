@@ -614,6 +614,9 @@ void NvgWindow::drawHud(QPainter &p) {
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
+  int rn_btn = 0;
+  if (showDebugUI && !roadName.isEmpty()) rn_btn = 30;
+
   if (engageable) {
     if (showDebugUI && showVTSC) {
       drawVisionTurnControllerUI(p, rect().right() - 184 - bdr_s, int(bdr_s * 1.5), 184, vtscColor, vtscSpeed, 100);
@@ -643,7 +646,7 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // dm icon
   if (!hideDM) {
-    drawIcon(p, radius / 2 + (bdr_s * 2), rect().bottom() - footer_h / 2,
+    drawIcon(p, radius / 2 + (bdr_s * 2), (rect().bottom() - footer_h / 2) - rn_btn,
              dm_img, QColor(0, 0, 0, 70), dmActive ? 1.0 : 0.2);
   }
 
@@ -653,7 +656,7 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // Dynamic Lane Profile Button
   if (endToEnd) {
-    drawDlpButton(p, bdr_s * 2 + 220, rect().bottom() - footer_h / 2 - 100, 192, 192);
+    drawDlpButton(p, bdr_s * 2 + 220, (rect().bottom() - footer_h / 2 - 100) - rn_btn, 192, 192);
   }
 
   // Right Dev UI
@@ -671,13 +674,14 @@ void NvgWindow::drawHud(QPainter &p) {
 
   // Gap Adjust Cruise Button
   if (gapAdjustCruise && (gapAdjustCruiseMode != 0) && uiState()->scene.longitudinal_control) {
-    drawGacButton(p, bdr_s * 2 + 220 + 222, rect().bottom() - footer_h / 2 - 100, 192, 192);
+    drawGacButton(p, bdr_s * 2 + 220 + 222, (rect().bottom() - footer_h / 2 - 100) - rn_btn, 192, 192);
   }
 
   // Bottom bar road name
   if (showDebugUI && !roadName.isEmpty()) {
     const int h = 60;
     QRect bar_rc(rect().left(), rect().bottom() - h, rect().width(), h);
+    p.setPen(Qt::NoPen);
     p.setBrush(QColor(0, 0, 0, 100));
     p.drawRect(bar_rc);
     configFont(p, "Inter", 38, "Bold");
@@ -1084,11 +1088,18 @@ void NvgWindow::drawRightDevUiBorder(QPainter &p, int x, int y) {
 
 void NvgWindow::drawGacButton(QPainter &p, int x, int y, int w, int h) {
   int prev_gap_adjust_cruise_tr = -1;
+  int init_gap_adjust_cruise_tr = -1;
+  bool lock_init = false;
   QString gac_text = "";
   QColor gac_border = QColor(255, 255, 255, 255);
 
-  if (prev_gap_adjust_cruise_tr != gapAdjustCruiseTr) {
-    prev_gap_adjust_cruise_tr = gapAdjustCruiseTr;
+  if ((prev_gap_adjust_cruise_tr != gapAdjustCruiseTr) || (!lock_init && (init_gap_adjust_cruise_tr != uiState()->scene.gap_adjust_cruise_tr))) {
+    if (!lock_init && (init_gap_adjust_cruise_tr != uiState()->scene.gap_adjust_cruise_tr)) {
+      lock_init = true;
+      init_gap_adjust_cruise_tr = uiState()->scene.gap_adjust_cruise_tr;
+    } else if (prev_gap_adjust_cruise_tr != gapAdjustCruiseTr) {
+      prev_gap_adjust_cruise_tr = gapAdjustCruiseTr;
+    }
     if (uiState()->scene.car_make == 1) {
       if (gapAdjustCruiseTr == 4) {
         gac_text = "Chill\nGap";
@@ -1157,32 +1168,6 @@ void NvgWindow::drawCircle(QPainter &p, int x, int y, int r, QBrush bg) {
   p.setBrush(bg);
   p.drawEllipse(x - r, y - r, 2 * r, 2 * r);
 }
-
-/**void NvgWindow::drawSpeedSign(QPainter &p, QRect rc, const QString &speed_limit, const QString &sub_text,
-                              int subtext_size, bool is_map_sourced, bool is_active) {
-  const QColor ring_color = is_active ? QColor(255, 0, 0, 255) : QColor(0, 0, 0, 50);
-  const QColor inner_color = QColor(255, 255, 255, is_active ? 255 : 85);
-  const QColor text_color = QColor(0, 0, 0, is_active ? 255 : 85);
-
-  const int x = rc.center().x();
-  const int y = rc.center().y();
-  const int r = rc.width() / 2.0f;
-
-  drawCircle(p, x, y, r, ring_color);
-  drawCircle(p, x, y, int(r * 0.8f), inner_color);
-
-  configFont(p, "Inter", 89, "Bold");
-  drawCenteredText(p, x, y, speed_limit, text_color);
-  configFont(p, "Inter", subtext_size, "Bold");
-  drawCenteredText(p, x, y + 55, sub_text, text_color);
-
-  if (is_map_sourced) {
-    p.setPen(Qt::NoPen);
-    p.setOpacity(is_active ? 1.0 : 0.3);
-    p.drawPixmap(x - subsign_img_size / 2, y - 55 - subsign_img_size / 2, map_img);
-    p.setOpacity(1.0);
-  }
-}**/
 
 void NvgWindow::drawTurnSpeedSign(QPainter &p, QRect rc, const QString &turn_speed, const QString &sub_text,
                                   int curv_sign, bool is_active) {
