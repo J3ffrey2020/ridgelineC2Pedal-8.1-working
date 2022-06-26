@@ -206,7 +206,7 @@ class Controls:
       self.startup_event = None
 
     # controlsd is driven by can recv, expected at 100Hz
-    self.rk = Ratekeeper(100, print_delay_threshold=1800)
+    self.rk = Ratekeeper(100, print_delay_threshold=500)
     self.prof = Profiler(False)  # off by default
 
   def update_events(self, CS):
