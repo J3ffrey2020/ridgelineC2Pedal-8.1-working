@@ -350,7 +350,7 @@ class CarState(CarStateBase):
     ret.cruiseState.nonAdaptive = self.cruise_mode != 0
 
     if self.CP.carFingerprint in (CAR.PILOT, CAR.PILOT_2019, CAR.RIDGELINE):
-      if ret.brake > 0.05:
+      if ret.brake > 0.1:
         ret.brakePressed = True
 
     # TODO: discover the CAN msg that has the imperial unit bit for all other cars
